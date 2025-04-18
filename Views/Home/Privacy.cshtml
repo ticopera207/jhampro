@@ -1,6 +1,65 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Nosotros";
 }
-<h1>@ViewData["Title"]</h1>
+<h1 class="text-center my-4">@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<style>
+    .img-ajustada {
+        height: 300px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    .text-justify {
+        text-align: justify;
+    }
+</style>
+
+<div class="container my-5">
+    <!-- VISIÓN -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <img src="~/imagenes/1s.jpg" alt="Visión - bufete de abogados" class="img-ajustada rounded shadow-sm" />
+        </div>
+        <div class="col-md-6">
+            <h3 class="fw-bold">Nuestra visión:</h3>
+            <p class="text-justify">
+                Ser el bufete de abogados líder en soluciones jurídicas integrales, reconocido por su excelencia profesional, ética y compromiso con la justicia, brindando confianza y resultados a nuestros clientes a nivel nacional e internacional.
+            </p>
+        </div>
+    </div>
+
+    <!-- MISIÓN -->
+    <div class="row align-items-center flex-md-row-reverse">
+        <div class="col-md-6">
+            <img src="~/imagenes/2s.jpg" alt="Misión - bufete de abogados" class="img-ajustada rounded shadow-sm" />
+        </div>
+        <div class="col-md-6">
+            <h3 class="fw-bold">Nuestra misión:</h3>
+            <p class="text-justify">
+                Brindar asesoría y representación legal de alta calidad a nuestros clientes, con un enfoque personalizado, ético y eficaz. Nos comprometemos a proteger los derechos e intereses de cada persona o empresa, ofreciendo soluciones jurídicas confiables en diversas áreas del derecho.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- valores -->
+<div class="my-5">
+    <h3 class="fw-bold text-center mb-4">Nuestros valores</h3>
+    <div class="row text-center">
+        <div class="col-md-4">
+            <h5 class="fw-semibold">Ética</h5>
+            <p class="text-justify">Actuamos con integridad en cada caso que asumimos, respetando las normas legales y morales.</p>
+        </div>
+        <div class="col-md-4">
+            <h5 class="fw-semibold">Compromiso</h5>
+            <p class="text-justify">Nos involucramos a fondo con nuestros clientes, defendiendo sus intereses como propios.</p>
+        </div>
+        <div class="col-md-4">
+            <h5 class="fw-semibold">Excelencia</h5>
+            <p class="text-justify">Brindamos un servicio jurídico de alta calidad y buscamos resultados favorables.</p>
+        </div>
+    </div>
+</div>
+
+
+
