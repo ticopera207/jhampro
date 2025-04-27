@@ -2,7 +2,60 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero d-flex align-items-center text-center" 
+    style="background-image: url('@Url.Content("~/imagenes/por1.PNG")'); background-size: cover; background-position: center; height: 90vh;">
+    <div class="container">
+        <div style="background-color: rgba(205, 209, 211, 0.7); padding: 2rem; border-radius: 0.5rem;"> <!-- Fondo personalizado -->
+            <h1 class="display-4 fw-bold text-dark">Defendemos tus derechos</h1>
+            <p class="lead mt-4 text-dark">Experiencia, ética y compromiso legal a tu servicio.</p>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+<section class="container my-5">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <i class="bi bi-shield-lock" style="font-size: 3rem; color: #007bff;"></i>
+            <h4 class="fw-bold my-3">Protección Legal</h4>
+            <p>Asesoría personalizada para defender tus intereses y proteger tus derechos.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-people" style="font-size: 3rem; color: #007bff;"></i>
+            <h4 class="fw-bold my-3">Atención Personalizada</h4>
+            <p>Nos enfocamos en entender tu caso para ofrecerte soluciones jurídicas efectivas.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-briefcase" style="font-size: 3rem; color: #007bff;"></i>
+            <h4 class="fw-bold my-3">Amplia Experiencia</h4>
+            <p>Más de 10 años de trayectoria en diversas ramas del derecho.</p>
+        </div>
+    </div>
+</section>
+
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="fw-bold text-center mb-4">¿Por qué elegirnos?</h2>
+        <p class="text-center mb-5">En nuestro bufete trabajamos incansablemente para garantizar justicia y resultados positivos para nuestros clientes.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-unstyled">
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success"></i> Confidencialidad absoluta</li>
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success"></i> Defensa estratégica en cada caso</li>
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success"></i> Asesoramiento integral</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-unstyled">
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success"></i> Atención ágil y profesional</li>
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success"></i> Amplia red de especialistas</li>
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success"></i> Resultados comprobados</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
