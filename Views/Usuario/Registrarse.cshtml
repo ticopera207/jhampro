@@ -4,31 +4,44 @@
     ViewData["Title"] = "Registrarse";
 }
 
-<h2>Formulario de Registro</h2>
+<!-- Link al CSS solo para esta página -->
+<link rel="stylesheet" href="~/css/registro.css" />
 
-<form asp-action="Registrarse" method="post">
-    <div class="form-group">
-        <label>Nombre</label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
+<div class="fondo-registro">
+    <div class="formulario-card">
+        <h2>Formulario de Registro</h2>
+
+        <form asp-action="Registrarse" method="post">
+            <div class="form-group mb-3">
+                <label asp-for="Nombre"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Apellidos"></label>
+                <input asp-for="Apellidos" class="form-control" />
+                <span asp-validation-for="Apellidos" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Edad"></label>
+                <input asp-for="Edad" type="number" class="form-control" />
+                <span asp-validation-for="Edad" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="Dni"></label>
+                <input asp-for="Dni" class="form-control" />
+                <span asp-validation-for="Dni" class="text-danger small"></span>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-custom">Registrarse</button>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label>Apellidos</label>
-        <input asp-for="Apellidos" class="form-control" />
-        <span asp-validation-for="Apellidos" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>Edad</label>
-        <input asp-for="Edad" type="number" class="form-control" />
-        <span asp-validation-for="Edad" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>DNI</label>
-        <input asp-for="Dni" class="form-control" />
-        <span asp-validation-for="Dni" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary mt-3">Registrarse</button>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
