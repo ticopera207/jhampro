@@ -16,12 +16,12 @@ namespace Jham.Controllers
             if (ModelState.IsValid)
             {
                 // Aquí guardarías el usuario en la BD o lógica correspondiente
-                return RedirectToAction("RegistroExitoso");
+                return RedirectToAction("Privacy");
             }
 
             return View(usuario);
         }
-
+        
         public IActionResult RegistroExitoso()
         {
             return View();
