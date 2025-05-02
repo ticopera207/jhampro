@@ -2,21 +2,26 @@
     ViewData["Title"] = "Iniciar Sesión";
 }
 <link rel="stylesheet" href="~/css/stylelogin.css" asp-append-version="true" />
+
 <div class="login-container">
     <h2>¡BIENVENIDO!</h2>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
     <form asp-action="Login" method="post">
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" name="Email" required />
+            <input type="email" name="Email" required class="form-control" />
         </div>
         <div class="form-group">
             <label for="password">Contraseña:</label>
-            <input type="password" name="Password" required />
+            <input type="password" name="Password" required class="form-control" />
         </div>
         <a class="forgot-password">¿Se te olvidó la contraseña?</a>
         <button type="submit" class="btn-login">Iniciar sesión</button>
-        <a href="/Registro" class="register-link">¿No tienes un cuenta?</a>
+        <a href="/Usuario/Registrarse" class="register-link">¿No tienes una cuenta?</a>
     </form>
 </div>
-    
-  

@@ -23,20 +23,47 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto"> <!-- Menú a la derecha -->
-                        <li class="nav-item">
-                            <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Home" asp-action="Privacy">Nosotros</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Login" asp-action="Login">Iniciar sesión</a>
-                        </li>
-                    </ul>
+                    @using Microsoft.AspNetCore.Http
+                    @inject IHttpContextAccessor HttpContextAccessor
+
+                <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                </li>
+                <li class="nav-item">
+                     <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Home" asp-action="Privacy">Nosotros</a>
+                </li>
+
+                @if (HttpContextAccessor.HttpContext.Session.GetString("UsuarioNombre") != null)
+                    {
+        <!-- Usuario logueado -->
+        <li class="nav-item">
+            <span class="nav-link text-white">Bienvenido, @HttpContextAccessor.HttpContext.Session.GetString("UsuarioNombre")</span>
+        </li>
+        <li class="nav-item">
+            <span class="nav-link text-white">Tipo: @HttpContextAccessor.HttpContext.Session.GetString("TipoUsuario")</span>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white fw-semibold" asp-controller="Login" asp-action="Logout">Cerrar sesión</a>
+        </li>
+            }
+        else
+            {
+        <!-- Usuario NO logueado -->
+        <li class="nav-item">
+            <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Usuario" asp-action="Registrarse">Registrarse</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Login" asp-action="Login">Iniciar sesión</a>
+        </li>
+            }
+            </ul>
+
+
+
+
+
+                    
                 </div>
             </div>
         </nav>
