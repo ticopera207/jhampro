@@ -1,0 +1,42 @@
+/* wwwroot/css/registro.css */
+
+.fondo-registro {
+    background-color: #071b26;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.formulario-card {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.formulario-card h2 {
+    text-align: center;
+    color: #071b26;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.formulario-card label {
+    color: #071b26;
+    font-weight: 600;
+}
+
+.btn-custom {
+    background-color: #c9ad84;
+    color: #071b26;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #b89570;
+}
