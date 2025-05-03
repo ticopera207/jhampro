@@ -16,8 +16,8 @@ namespace Jham.Models
     public DateTime FechaInicio { get; set; }
     public DateTime? FechaFin { get; set; }
 
-    public int CitaId { get; set; }
-    public Cita Cita { get; set; }
+    public int CitaId { get; set; }// Clave foránea
+    public Cita Cita { get; set; }// Navegación
 
     public ICollection<Documento> Documentos { get; set; }
     public ICollection<Retroalimentacion> Retroalimentaciones { get; set; }
