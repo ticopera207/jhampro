@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Jham.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250502213548_CambiarEdadPorFechaNacimiento")]
+    partial class CambiarEdadPorFechaNacimiento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,24 +23,6 @@ namespace Jham.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Jham.Models.Abogado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Abogados");
-                });
 
             modelBuilder.Entity("Jham.Models.Caso", b =>
                 {
@@ -76,9 +61,6 @@ namespace Jham.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AbogadoId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("EstadoCita")
                         .IsRequired()
                         .HasColumnType("text");
@@ -92,16 +74,9 @@ namespace Jham.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UsuarioId2")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AbogadoId");
-
                     b.HasIndex("UsuarioId");
-
-                    b.HasIndex("UsuarioId2");
 
                     b.ToTable("Citas");
                 });
@@ -136,54 +111,6 @@ namespace Jham.Migrations
                     b.HasIndex("CasoId");
 
                     b.ToTable("Documentos");
-                });
-
-            modelBuilder.Entity("Jham.Models.Especialidad", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NombreEspecialidad")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Especialidades");
-                });
-
-            modelBuilder.Entity("Jham.Models.Rel_AbogadoCaso", b =>
-                {
-                    b.Property<int>("AbogadoId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CasoId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("AbogadoId", "CasoId");
-
-                    b.HasIndex("CasoId");
-
-                    b.ToTable("Rel_AbogadoCasos");
-                });
-
-            modelBuilder.Entity("Jham.Models.Rel_AbogadoEspecialidad", b =>
-                {
-                    b.Property<int>("AbogadoId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("EspecialidadId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("AbogadoId", "EspecialidadId");
-
-                    b.HasIndex("EspecialidadId");
-
-                    b.ToTable("Rel_AbogadoEspecialidades");
                 });
 
             modelBuilder.Entity("Jham.Models.Retroalimentacion", b =>
@@ -258,17 +185,6 @@ namespace Jham.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("Jham.Models.Abogado", b =>
-                {
-                    b.HasOne("Jham.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("Jham.Models.Caso", b =>
                 {
                     b.HasOne("Jham.Models.Cita", "Cita")
@@ -282,29 +198,13 @@ namespace Jham.Migrations
 
             modelBuilder.Entity("Jham.Models.Cita", b =>
                 {
-                    b.HasOne("Jham.Models.Abogado", "Abogado")
-                        .WithMany()
-                        .HasForeignKey("AbogadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Jham.Models.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Jham.Models.Usuario", "Usuario2")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId2")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Abogado");
 
                     b.Navigation("Usuario");
-
-                    b.Navigation("Usuario2");
                 });
 
             modelBuilder.Entity("Jham.Models.Documento", b =>
@@ -318,44 +218,6 @@ namespace Jham.Migrations
                     b.Navigation("Caso");
                 });
 
-            modelBuilder.Entity("Jham.Models.Rel_AbogadoCaso", b =>
-                {
-                    b.HasOne("Jham.Models.Abogado", "Abogado")
-                        .WithMany("Casos")
-                        .HasForeignKey("AbogadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Jham.Models.Caso", "Caso")
-                        .WithMany()
-                        .HasForeignKey("CasoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Abogado");
-
-                    b.Navigation("Caso");
-                });
-
-            modelBuilder.Entity("Jham.Models.Rel_AbogadoEspecialidad", b =>
-                {
-                    b.HasOne("Jham.Models.Abogado", "Abogado")
-                        .WithMany("Especialidades")
-                        .HasForeignKey("AbogadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Jham.Models.Especialidad", "Especialidad")
-                        .WithMany("Abogados")
-                        .HasForeignKey("EspecialidadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Abogado");
-
-                    b.Navigation("Especialidad");
-                });
-
             modelBuilder.Entity("Jham.Models.Retroalimentacion", b =>
                 {
                     b.HasOne("Jham.Models.Caso", "Caso")
@@ -365,13 +227,6 @@ namespace Jham.Migrations
                         .IsRequired();
 
                     b.Navigation("Caso");
-                });
-
-            modelBuilder.Entity("Jham.Models.Abogado", b =>
-                {
-                    b.Navigation("Casos");
-
-                    b.Navigation("Especialidades");
                 });
 
             modelBuilder.Entity("Jham.Models.Caso", b =>
@@ -385,11 +240,6 @@ namespace Jham.Migrations
                 {
                     b.Navigation("Caso")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Jham.Models.Especialidad", b =>
-                {
-                    b.Navigation("Abogados");
                 });
 #pragma warning restore 612, 618
         }
