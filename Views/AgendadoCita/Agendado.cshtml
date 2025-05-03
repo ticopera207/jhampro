@@ -4,6 +4,41 @@
     ViewData["Title"] = "Agendamiento de Cita";
 }
 <link rel="stylesheet" href="~/css/styleagendar.css" asp-append-version="true" />
+<style>
+    .popup {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .popup-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: black;
+    }
+</style>
 <h2>Agendamiento de Cita</h2>
 
 <form asp-action="RegistrarCita" method="post">
@@ -45,5 +80,17 @@
         </label>
     </div>
     <br>
-    <button type="submit" class="btn btn-success">Continuar</button>
+    <button type="button" class="btn btn-success" onclick="mostrarPopup()">Continuar</button>
+
+    <div id="miPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="cerrarPopup()">&times;</span>
+            <p><strong>Importante:</strong> Por favor acércate al local para pagar en efectivo y confirmar tu cita.</p>
+            <button class="btn btn-success" type="submit">Entendido y Confirmar</button>
+        </div>
+    </div>
+    
 </form>
+
+<!-- JAVASCRIPT -->
+<script src="~/js/site.css"></script>
