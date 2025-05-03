@@ -1,0 +1,63 @@
+@model Jham.Models.Cita
+
+@{
+    ViewData["Title"] = "Agendamiento de Cita";
+}
+<link rel="stylesheet" href="~/css/styleagendar.css" asp-append-version="true" />
+<h2>Agendamiento de Cita</h2>
+
+<form asp-action="RegistrarCita" method="post">
+    <div class="form-group">
+        <label for="AbogadoId">Abogado</label>
+        <select class="form-control" id="AbogadoId" name="AbogadoId" required>
+            <option value="">Seleccione un abogado</option>
+            @foreach (var abogado in ViewBag.Abogados)
+            {
+                <option value="@abogado.Id">@abogado.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Fecha">Fecha</label>
+        <input type="date" class="form-control" id="Fecha" name="Fecha" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Hora">Horarios Disponibles</label>
+        <select class="form-control" id="Hora" name="Hora" required>
+            <option value="">Seleccione un horario</option>
+        </select>
+    </div>
+
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="Terminos" required />
+        <label class="form-check-label" for="Terminos">
+            Confirmo que la información ingresada es verídica y acepto los términos y condiciones del servicio.
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Continuar</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#AbogadoId, #Fecha').on('change', function () {
+                var abogadoId = $('#AbogadoId').val();
+                var fecha = $('#Fecha').val();
+
+                if (abogadoId && fecha) {
+                    $.getJSON('/AgendadoCIta/GetHorariosDisponibles', { abogadoId: abogadoId, fecha: fecha }, function (data) {
+                        var horarioSelect = $('#Hora');
+                        horarioSelect.empty();
+                        horarioSelect.append('<option value="">Seleccione un horario</option>');
+                        $.each(data, function (index, value) {
+                            horarioSelect.append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+}
