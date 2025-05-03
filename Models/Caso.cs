@@ -9,8 +9,8 @@ namespace Jham.Models
 {
     public class Caso
     {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]    
+      [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public string EstadoCaso { get; set; }
     public DateTime FechaInicio { get; set; }

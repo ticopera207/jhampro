@@ -17,6 +17,6 @@ namespace Jham.Models
     public DateTime Fecha { get; set; }
 
     public int CasoId { get; set; }
-    public Caso Caso { get; set; } 
+    public Caso Caso { get; set; }
     }
 }
