@@ -27,6 +27,14 @@
         <label for="Hora">Horarios Disponibles</label>
         <select class="form-control" id="Hora" name="Hora" required>
             <option value="">Seleccione un horario</option>
+            <option value="09:00">09:00 - 10:00</option>
+            <option value="10:00">10:00 - 11:00</option>
+            <option value="11:00">11:00 - 12:00</option>
+            <option value="13:00">13:00 - 14:00</option>
+            <option value="14:00">14:00 - 15:00</option>
+            <option value="15:00">15:00 - 16:00</option>
+            <option value="16:00">16:00 - 17:00</option>
+            <option value="17:00">17:00 - 18:00</option>
         </select>
     </div>
 
@@ -36,28 +44,6 @@
             Confirmo que la información ingresada es verídica y acepto los términos y condiciones del servicio.
         </label>
     </div>
-
-    <button type="submit" class="btn btn-primary">Continuar</button>
+    <br>
+    <button type="submit" class="btn btn-success">Continuar</button>
 </form>
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#AbogadoId, #Fecha').on('change', function () {
-                var abogadoId = $('#AbogadoId').val();
-                var fecha = $('#Fecha').val();
-
-                if (abogadoId && fecha) {
-                    $.getJSON('/AgendadoCIta/GetHorariosDisponibles', { abogadoId: abogadoId, fecha: fecha }, function (data) {
-                        var horarioSelect = $('#Hora');
-                        horarioSelect.empty();
-                        horarioSelect.append('<option value="">Seleccione un horario</option>');
-                        $.each(data, function (index, value) {
-                            horarioSelect.append('<option value="' + value + '">' + value + '</option>');
-                        });
-                    });
-                }
-            });
-        });
-    </script>
-}

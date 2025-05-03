@@ -20,7 +20,7 @@ namespace jhampro.Controllers
             _context = context;
         }
 
-        public IActionResult Agendar()
+        public IActionResult Agendado()
         {
             ViewBag.Abogados = _context.Abogados
                 .Select(a => new { a.Id, Nombre = a.Usuario.Nombre + " " + a.Usuario.Apellidos })
@@ -28,28 +28,8 @@ namespace jhampro.Controllers
             return View();
         }
 
-        [HttpGet]
-        public JsonResult GetHorariosDisponibles(int abogadoId, DateTime fecha)
-        {
-            var horariosOcupados = _context.Citas
-                .Where(c => c.AbogadoId == abogadoId && c.Fecha.Date == fecha.Date)
-                .Select(c => c.Hora)
-                .ToList();
 
-            var horarios = new List<TimeSpan>();
-            for (int hora = 9; hora <= 17; hora++)
-            {
-                if (hora == 12) continue; // Excluir 12-13 hrs
-                var horario = new TimeSpan(hora, 0, 0);
-                if (!horariosOcupados.Contains(horario))
-                {
-                    horarios.Add(horario);
-                }
-            }
-
-            return Json(horarios);
-        }
-
+        //CORREGIR ESTE MÉTODO
         [HttpPost]
         public IActionResult RegistrarCita(Cita cita)
         {
@@ -57,13 +37,13 @@ namespace jhampro.Controllers
             {
                 _context.Citas.Add(cita);
                 _context.SaveChanges();
-                return RedirectToAction("Agendar");
+                return RedirectToAction("","");
             }
 
             ViewBag.Abogados = _context.Abogados
                 .Select(a => new { a.Id, Nombre = a.Usuario.Nombre + " " + a.Usuario.Apellidos })
                 .ToList();
-            return View("Agendar", cita);
+            return View("Agendado", cita);
         }
     }
 }
