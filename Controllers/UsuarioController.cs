@@ -5,23 +5,41 @@ namespace Jham.Controllers
 {
     public class UsuarioController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public UsuarioController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
         public IActionResult Registrarse()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Registrarse(Usuario usuario)
+        public async Task<IActionResult> Registrarse(Usuario usuario)
         {
-            if (ModelState.IsValid)
-            {
-                // Aquí guardarías el usuario en la BD o lógica correspondiente
-                return RedirectToAction("Privacy");
-            }
+            DateTime hoy = DateTime.Today;
+         int edad = hoy.Year - usuario.FechaNacimiento.Year;
+            if (usuario.FechaNacimiento.Date > hoy.AddYears(-edad)) edad--;
 
-            return View(usuario);
+         if (edad < 18)
+            {
+                ModelState.AddModelError("FechaNacimiento", "Debes tener al menos 18 años para registrarte.");
+             }
+
+         if (!ModelState.IsValid)
+            {
+                return View(usuario);
+            }
+            usuario.FechaNacimiento = DateTime.SpecifyKind(usuario.FechaNacimiento, DateTimeKind.Utc);
+             _context.Usuarios.Add(usuario);
+            await _context.SaveChangesAsync();
+             return RedirectToAction("RegistroExitoso");
         }
-        
+
         public IActionResult RegistroExitoso()
         {
             return View();
