@@ -9,15 +9,15 @@ namespace Jham.Models
 {
     public class Caso
     {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]    
+      [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public string EstadoCaso { get; set; }
     public DateTime FechaInicio { get; set; }
     public DateTime? FechaFin { get; set; }
 
-    public int CitaId { get; set; }
-    public Cita Cita { get; set; }
+    public int CitaId { get; set; }// Clave foránea
+    public Cita Cita { get; set; }// Navegación
 
     public ICollection<Documento> Documentos { get; set; }
     public ICollection<Retroalimentacion> Retroalimentaciones { get; set; }

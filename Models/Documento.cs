@@ -19,5 +19,6 @@ namespace Jham.Models
 
     public int CasoId { get; set; }
     public Caso Caso { get; set; }
+    
     }
 }

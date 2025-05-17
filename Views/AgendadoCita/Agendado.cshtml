@@ -1,0 +1,96 @@
+@model Jham.Models.Cita
+
+@{
+    ViewData["Title"] = "Agendamiento de Cita";
+}
+<link rel="stylesheet" href="~/css/styleagendar.css" asp-append-version="true" />
+<style>
+    .popup {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .popup-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: black;
+    }
+</style>
+<h2>Agendamiento de Cita</h2>
+
+<form asp-action="RegistrarCita" method="post">
+    <div class="form-group">
+        <label for="AbogadoId">Abogado</label>
+        <select class="form-control" id="AbogadoId" name="AbogadoId" required>
+            <option value="">Seleccione un abogado</option>
+            @foreach (var abogado in ViewBag.Abogados)
+            {
+                <option value="@abogado.Id">@abogado.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Fecha">Fecha</label>
+        <input type="date" class="form-control" id="Fecha" name="Fecha" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Hora">Horarios Disponibles</label>
+        <select class="form-control" id="Hora" name="Hora" required>
+            <option value="">Seleccione un horario</option>
+            <option value="09:00">09:00 - 10:00</option>
+            <option value="10:00">10:00 - 11:00</option>
+            <option value="11:00">11:00 - 12:00</option>
+            <option value="13:00">13:00 - 14:00</option>
+            <option value="14:00">14:00 - 15:00</option>
+            <option value="15:00">15:00 - 16:00</option>
+            <option value="16:00">16:00 - 17:00</option>
+            <option value="17:00">17:00 - 18:00</option>
+        </select>
+    </div>
+
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="Terminos" required />
+        <label class="form-check-label" for="Terminos">
+            Confirmo que la información ingresada es verídica y acepto los términos y condiciones del servicio.
+        </label>
+    </div>
+    <br>
+    <button type="button" class="btn btn-success" onclick="mostrarPopup()">Continuar</button>
+
+    <div id="miPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="cerrarPopup()">&times;</span>
+            <p><strong>Importante:</strong> Por favor acércate al local para pagar en efectivo y confirmar tu cita.</p>
+            <button class="btn btn-success" type="submit">Entendido y Confirmar</button>
+        </div>
+    </div>
+    
+</form>
+
+<!-- JAVASCRIPT -->
+<script src="~/js/site.css"></script>
