@@ -14,32 +14,35 @@ namespace Jham.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } // Clave primaria
 
-        [Required]
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
         public string Nombre { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Los apellidos son obligatorios.")]
         public string Apellidos { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "El correo es obligatorio.")]
+        [EmailAddress(ErrorMessage = "El correo no tiene un formato válido.")]
         public string Correo { get; set; } // Correo electrónico
 
-        [Required]
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
         [MinLength(6)]
         public string Contraseña { get; set; } // Contraseña del usuario
 
-        [Required]
-        [Phone]
+        [Required(ErrorMessage = "El número de celular es obligatorio.")]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "El número de celular debe tener exactamente 9 dígitos.")]
+[       Display(Name = "Celular")]
         public string Celular { get; set; } // Número de celular
 
-        [Required]
-        [StringLength(8, MinimumLength = 8)]
+        [Required(ErrorMessage = "El DNI es obligatorio.")]
+         [RegularExpression(@"^\d{8}$", ErrorMessage = "El DNI debe tener 8 dígitos.")]
         public string Dni { get; set; } // DNI del usuario
 
-        [Required]
+        [Required(ErrorMessage = "Debe seleccionar un tipo de usuario.")]
         public string TipoUsuario { get; set; }
         
-        [Range(0, 120)]
-        public int Edad { get; set; } // Edad del usuario
+        [DataType(DataType.Date)]
+        [Display(Name = "Fecha de nacimiento")]
+[       Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
+        public DateTime FechaNacimiento { get; set; }
     }
 }
