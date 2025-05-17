@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations; //Necesario para el uso de [Key]
-using System.ComponentModel.DataAnnotations.Schema; //Necesario para el uso de [DatabaseGenerated]
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace jhampro.Models
@@ -39,7 +39,7 @@ namespace jhampro.Models
         public string Dni { get; set; } // DNI del usuario
 
         [Required(ErrorMessage = "Debe seleccionar un tipo de usuario.")]
-        public string TipoUsuario { get; set; } = "Cliente"
+        public string TipoUsuario { get; set; } = "Cliente";
 
         // Relación uno a muchos (Cliente a Servicio)
         public ICollection<Servicio> ServiciosComoCliente { get; set; }

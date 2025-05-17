@@ -1,4 +1,4 @@
-@model Jham.Models.Usuario
+@model jhampro.Models.Usuario
 
 @{
     ViewData["Title"] = "Registrarse";
@@ -13,22 +13,15 @@
 
         <form asp-action="Registrarse" method="post">
             <div class="form-group mb-3">
-                <label asp-for="Nombre"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger small"></span>
+                <label asp-for="Nombres"></label>
+                <input asp-for="Nombres" class="form-control" />
+                <span asp-validation-for="Nombres" class="text-danger small"></span>
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="Apellidos"></label>
                 <input asp-for="Apellidos" class="form-control" />
                 <span asp-validation-for="Apellidos" class="text-danger small"></span>
-            </div>
-
-            <div class="form-group mb-3">
-            <label asp-for="FechaNacimiento">Fecha de Nacimiento</label>
-            <input asp-for="FechaNacimiento" type="date" class="form-control"
-             max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")" />
-             <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
             </div>
 
             <div class="form-group mb-3">
@@ -44,9 +37,9 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="Contraseña"></label>
-                <input asp-for="Contraseña" type="password" class="form-control" />
-                <span asp-validation-for="Contraseña" class="text-danger small"></span>
+                <label asp-for="Contrasena"></label>
+                <input asp-for="Contrasena" type="password" class="form-control" />
+                <span asp-validation-for="Contrasena" class="text-danger small"></span>
             </div>
 
            <div class="form-group mb-3">

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace jhampro.Models
 {
@@ -21,6 +23,6 @@ namespace jhampro.Models
         public Usuario Cliente { get; set; }
 
         // Relación muchos a muchos (Abogado a Servicio)
-        public ICollection<AbogadoServicio> AbogadoServicios { get; set; };
+        public ICollection<AbogadoServicio> AbogadoServicios { get; set; }
     }
 }
