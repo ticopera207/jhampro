@@ -6,16 +6,17 @@ using System.ComponentModel.DataAnnotations; //Necesario para el uso de [Key]
 using System.ComponentModel.DataAnnotations.Schema; //Necesario para el uso de [DatabaseGenerated]
 
 
-namespace Jham.Models
+namespace jhampro.Models
 {
+    [Table("usuario")]
     public class Usuario
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } // Clave primaria
 
-        [Required(ErrorMessage = "El nombre es obligatorio.")]
-        public string Nombre { get; set; }
+        [Required(ErrorMessage = "Los nombres son obligatorios.")]
+        public string Nombres { get; set; }
 
         [Required(ErrorMessage = "Los apellidos son obligatorios.")]
         public string Apellidos { get; set; }
@@ -26,23 +27,24 @@ namespace Jham.Models
 
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
         [MinLength(6)]
-        public string Contraseña { get; set; } // Contraseña del usuario
+        public string Contrasena { get; set; } // Contraseña del usuario
 
         [Required(ErrorMessage = "El número de celular es obligatorio.")]
         [RegularExpression(@"^\d{9}$", ErrorMessage = "El número de celular debe tener exactamente 9 dígitos.")]
-[       Display(Name = "Celular")]
+        [Display(Name = "Celular")]
         public string Celular { get; set; } // Número de celular
 
         [Required(ErrorMessage = "El DNI es obligatorio.")]
-         [RegularExpression(@"^\d{8}$", ErrorMessage = "El DNI debe tener 8 dígitos.")]
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "El DNI debe tener 8 dígitos.")]
         public string Dni { get; set; } // DNI del usuario
 
         [Required(ErrorMessage = "Debe seleccionar un tipo de usuario.")]
-        public string TipoUsuario { get; set; }
-        
-        [DataType(DataType.Date)]
-        [Display(Name = "Fecha de nacimiento")]
-[       Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
-        public DateTime FechaNacimiento { get; set; }
+        public string TipoUsuario { get; set; } = "Cliente"
+
+        // Relación uno a muchos (Cliente a Servicio)
+        public ICollection<Servicio> ServiciosComoCliente { get; set; }
+
+        // Relación muchos a muchos (Abogado a Servicio)
+        public ICollection<AbogadoServicio> AbogadoServicios { get; set; }
     }
 }

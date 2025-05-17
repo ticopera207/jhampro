@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Jham.Models;
+using jhampro.Models;
 
 
 
 
-
+namespace jhampro.Data
 
 public class ApplicationDbContext : DbContext
 {
@@ -15,43 +15,30 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<Cita> Citas { get; set; }
-    public DbSet<Caso> Casos { get; set; }
-    public DbSet<Documento> Documentos { get; set; }
-    public DbSet<Retroalimentacion> Retroalimentaciones { get; set; }
-    public DbSet<Abogado> Abogados { get; set; }
-    public DbSet<Rel_AbogadoCaso> Rel_AbogadoCasos { get; set; }
-    public DbSet<Rel_AbogadoEspecialidad> Rel_AbogadoEspecialidades { get; set; }
-    public DbSet<Especialidad> Especialidades { get; set; }
+    public DbSet<Servicio> Servicios { get; set; }
+    public DbSet<AbogadoServicio> AbogadoServicio { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
-    // Relación uno a uno: Caso ↔ Cita
-    modelBuilder.Entity<Caso>()
-        .HasOne(c => c.Cita)
-        .WithOne(cita => cita.Caso)
-        .HasForeignKey<Caso>(c => c.CitaId)
-        .OnDelete(DeleteBehavior.Cascade);
+    // Relación uno a muchos (Cliente a Servicio)
+        modelBuilder.Entity<Servicio>()
+            .HasOne(s => s.Cliente)
+            .WithMany(u => u.ServiciosComoCliente)
+            .HasForeignKey(s => s.ClienteId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-    // Relación UsuarioId y UsuarioId2 en Cita
-    modelBuilder.Entity<Cita>()
-        .HasOne(c => c.Usuario)
-        .WithMany()
-        .HasForeignKey(c => c.UsuarioId)
-        .OnDelete(DeleteBehavior.Restrict);
+        // Relación muchos a muchos (Abogado a Servicio) - Clave compuesta
+        modelBuilder.Entity<AbogadoServicio>()
+            .HasKey(us => new { us.UsuarioId, us.ServicioId });
 
-    modelBuilder.Entity<Cita>()
-        .HasOne(c => c.Usuario2)
-        .WithMany()
-        .HasForeignKey(c => c.UsuarioId2)
-        .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<AbogadoServicio>()
+            .HasOne(us => us.Usuario)
+            .WithMany(u => u.AbogadoServicios)
+            .HasForeignKey(us => us.UsuarioId);
 
-    // Relación muchos a muchos: Abogado ↔ Caso
-    modelBuilder.Entity<Rel_AbogadoCaso>()
-        .HasKey(ac => new { ac.AbogadoId, ac.CasoId });
-
-    // Relación muchos a muchos: Abogado ↔ Especialidad
-    modelBuilder.Entity<Rel_AbogadoEspecialidad>()
-        .HasKey(ae => new { ae.AbogadoId, ae.EspecialidadId });
+        modelBuilder.Entity<AbogadoServicio>()
+            .HasOne(us => us.Servicio)
+            .WithMany(s => s.AbogadoServicios)
+            .HasForeignKey(us => us.ServicioId);
 
     base.OnModelCreating(modelBuilder);
 }
