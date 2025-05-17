@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace jhampro.Models
 {
-    [Table("abogado_servicio")]
     public class AbogadoServicio
     {
          // Claves Primarias Compuestas

@@ -1,14 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using jhampro.Models;
 
-
-
-
-namespace jhampro.Data
-
 public class ApplicationDbContext : DbContext
 {
-    
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
@@ -18,8 +13,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Servicio> Servicios { get; set; }
     public DbSet<AbogadoServicio> AbogadoServicio { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    // Relación uno a muchos (Cliente a Servicio)
+    {
+        // Relación uno a muchos (Cliente a Servicio)
         modelBuilder.Entity<Servicio>()
             .HasOne(s => s.Cliente)
             .WithMany(u => u.ServiciosComoCliente)
@@ -31,7 +26,7 @@ public class ApplicationDbContext : DbContext
             .HasKey(us => new { us.UsuarioId, us.ServicioId });
 
         modelBuilder.Entity<AbogadoServicio>()
-            .HasOne(us => us.Usuario)
+            .HasOne(us => us.Abogado)
             .WithMany(u => u.AbogadoServicios)
             .HasForeignKey(us => us.UsuarioId);
 
@@ -40,9 +35,7 @@ public class ApplicationDbContext : DbContext
             .WithMany(s => s.AbogadoServicios)
             .HasForeignKey(us => us.ServicioId);
 
-    base.OnModelCreating(modelBuilder);
-}
-   
-    
-    
+        base.OnModelCreating(modelBuilder);
+    }
+
 }

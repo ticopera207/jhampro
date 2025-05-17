@@ -7,23 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Jham.Models;
+using jhampro.Models;
 
 namespace jhampro.Controllers
 {
-    public class AgendadoCItaController : Controller
+    public class AgendadoCitaController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AgendadoCItaController(ApplicationDbContext context)
+        public AgendadoCitaController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public IActionResult Agendado()
         {
-            ViewBag.Abogados = _context.Abogados
-                .Select(a => new { a.Id, Nombre = a.Usuario.Nombre + " " + a.Usuario.Apellidos })
+            ViewBag.Usuario = _context.Usuarios
+                .Select(a => new { a.Id, Nombre = a.Nombres + " " + a.Apellidos })
                 .ToList();
             return View();
         }
@@ -31,19 +31,19 @@ namespace jhampro.Controllers
 
         //CORREGIR ESTE MÉTODO
         [HttpPost]
-        public IActionResult RegistrarCita(Cita cita)
+        public IActionResult RegistrarCita(Servicio servicio)
         {
             if (ModelState.IsValid)
             {
-                _context.Citas.Add(cita);
+                _context.Servicios.Add(servicio);
                 _context.SaveChanges();
                 return RedirectToAction("","");
             }
 
-            ViewBag.Abogados = _context.Abogados
-                .Select(a => new { a.Id, Nombre = a.Usuario.Nombre + " " + a.Usuario.Apellidos })
+            ViewBag.Abogados = _context.Usuarios
+                .Select(a => new { a.Id, Nombre = a.Nombres + " " + a.Apellidos })
                 .ToList();
-            return View("Agendado", cita);
+            return View("Agendado", servicio);
         }
     }
 }
