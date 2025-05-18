@@ -1,8 +1,9 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using jhampro.Models;
 using Jham.Models;
 
-namespace Jham.Controllers;
+namespace jhampro.Controllers;
 
 public class HomeController : Controller
 {
