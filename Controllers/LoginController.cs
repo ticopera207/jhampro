@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Jham.Models;
+using jhampro.Models;
 using System.Linq;
 
 namespace jhampro.Controllers
@@ -25,12 +25,12 @@ namespace jhampro.Controllers
         public IActionResult Login(string Email, string Password)
         {
             var usuario = _context.Usuarios
-                .FirstOrDefault(u => u.Correo == Email && u.Contraseña == Password);
+                .FirstOrDefault(u => u.Correo == Email && u.Contrasena == Password);
 
             if (usuario != null)
             {
                 // Aquí puedes guardar información en la sesión si deseas
-            HttpContext.Session.SetString("UsuarioNombre", usuario.Nombre);
+            HttpContext.Session.SetString("UsuarioNombre", usuario.Nombres);
             HttpContext.Session.SetString("TipoUsuario", usuario.TipoUsuario);
             HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
                 return RedirectToAction("Index", "Home"); // Redirige a tu página principal
