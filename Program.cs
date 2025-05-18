@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Jham.Models;
+using jhampro.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
