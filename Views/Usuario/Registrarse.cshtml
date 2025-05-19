@@ -4,65 +4,45 @@
     ViewData["Title"] = "Registrarse";
 }
 
-<!-- Link al CSS solo para esta página -->
 <link rel="stylesheet" href="~/css/registro.css" />
 
 <div class="fondo-registro">
     <div class="formulario-card">
         <h2>Formulario de Registro</h2>
-
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <form asp-action="Registrarse" method="post">
             <div class="form-group mb-3">
                 <label asp-for="Nombres"></label>
                 <input asp-for="Nombres" class="form-control" />
                 <span asp-validation-for="Nombres" class="text-danger small"></span>
             </div>
-
             <div class="form-group mb-3">
                 <label asp-for="Apellidos"></label>
                 <input asp-for="Apellidos" class="form-control" />
                 <span asp-validation-for="Apellidos" class="text-danger small"></span>
             </div>
-
             <div class="form-group mb-3">
                 <label asp-for="Dni"></label>
                 <input asp-for="Dni" class="form-control" />
                 <span asp-validation-for="Dni" class="text-danger small"></span>
             </div>
-
             <div class="form-group mb-3">
                 <label asp-for="Correo"></label>
                 <input asp-for="Correo" type="email" class="form-control" />
                 <span asp-validation-for="Correo" class="text-danger small"></span>
             </div>
-
             <div class="form-group mb-3">
                 <label asp-for="Contrasena"></label>
                 <input asp-for="Contrasena" type="password" class="form-control" />
                 <span asp-validation-for="Contrasena" class="text-danger small"></span>
             </div>
-
-           <div class="form-group mb-3">
-             <label asp-for="Celular"></label>
-            <input asp-for="Celular" class="form-control" maxlength="9" />
-            <span asp-validation-for="Celular" class="text-danger small"></span>
+            <div class="form-group mb-3">
+                <label asp-for="Celular"></label>
+                <input asp-for="Celular" class="form-control" maxlength="9" />
+                <span asp-validation-for="Celular" class="text-danger small"></span>
             </div>
-
-            <!--
-            <div class="form-group mb-4">
-                <label asp-for="TipoUsuario"></label>
-                <select asp-for="TipoUsuario" class="form-control">
-                    <option value="">Seleccione un tipo</option>
-                    <option value="Cliente">Cliente</option>
-                    <option value="Abogado">Abogado</option>
-                    
-                </select>
-                <span asp-validation-for="TipoUsuario" class="text-danger small"></span>
-            </div>
-            -->
-
+            <input type="hidden" asp-for="TipoUsuario" />
             <div class="d-grid">
-                
                 <button type="submit" class="btn btn-custom">Registrarse</button>
             </div>
         </form>
