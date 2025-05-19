@@ -39,12 +39,12 @@ namespace jhampro.Models
         public string Dni { get; set; } // DNI del usuario
 
         [Required(ErrorMessage = "Debe seleccionar un tipo de usuario.")]
-        public string TipoUsuario { get; set; } = "Cliente";
+        public string TipoUsuario { get; set; } = "Cliente";  //La creación de abogado se hace manualmente
 
         // Relación uno a muchos (Cliente a Servicio)
-        public ICollection<Servicio> ServiciosComoCliente { get; set; }
+        public ICollection<Servicio> ServiciosComoCliente { get; set; } = new List<Servicio>();
 
         // Relación muchos a muchos (Abogado a Servicio)
-        public ICollection<AbogadoServicio> AbogadoServicios { get; set; }
+        public ICollection<AbogadoServicio> AbogadoServicios { get; set; } = new List<AbogadoServicio>();
     }
 }
