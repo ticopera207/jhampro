@@ -34,3 +34,11 @@
     <input type="hidden" name="TipoServicio" value="Cita" />
     <button type="submit" class="btn btn-primary">Agendar</button>
 </form>
+<br>
+
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["MensajeExito"]
+    </div>
+}

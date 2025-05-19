@@ -83,7 +83,7 @@ namespace jhampro.Controllers
         };
         _context.AbogadoServicio.Add(abogadoServicio);
         _context.SaveChanges();
-
+        TempData["MensajeExito"] = "La cita fue agendada exitosamente."; //Mensaje de exito
         return RedirectToAction("Agendado");
     }
     }
