@@ -24,5 +24,8 @@ namespace jhampro.Models
 
         // Relación muchos a muchos (Abogado a Servicio)
         public ICollection<AbogadoServicio> AbogadoServicios { get; set; }
+
+        // Relación uno a uno (Pago)
+        public Pago? Pago { get; set; }
     }
 }

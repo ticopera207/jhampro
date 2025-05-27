@@ -35,6 +35,12 @@ public class ApplicationDbContext : DbContext
             .WithMany(s => s.AbogadoServicios)
             .HasForeignKey(us => us.ServicioId);
 
+        // Relación uno a uno (Pago a Servicio)
+        modelBuilder.Entity<Servicio>()
+            .HasOne(s => s.Pago)
+            .WithOne(p => p.Servicio)
+            .HasForeignKey<Pago>(p => p.ServicioId);
+        
         base.OnModelCreating(modelBuilder);
     }
 
