@@ -1,6 +1,9 @@
+@model jhampro.Models.AgendadoCitaViewModel
 @{
     ViewData["Title"] = "Agendar Cita";
-    var abogados = ViewBag.Abogados as IEnumerable<dynamic> ?? new List<dynamic>();
+
+    @* var abogados = ViewBag.Abogados as IEnumerable<dynamic> ?? new List<dynamic>(); *@
+    var abogados = Model.Abogados;
 }
 <link rel="stylesheet" href="~/css/cita.css" />
 <div class="cita-container">
@@ -26,7 +29,7 @@
                     <option value="">Seleccione un abogado</option>
                     @foreach (var abogado in abogados)
                     {
-                        <option value="@abogado.Id">@abogado.Nombre</option>
+                        <option value="@abogado.Id">@($"{abogado.Nombres} {abogado.Apellidos}")</option>
                     }
                 </select>
             </div>
@@ -55,6 +58,32 @@
                 AGENDAR
             </button>
         </form>
+        <div class="servicios-container">
+            <h2>Mis Servicios</h2>
+
+            @foreach (var servicio in Model.Servicios)
+            {
+                var estadoClase = servicio.Estado == "EnEspera" ? "estado-enespera" : "estado-pagado";
+                <div class="servicio-card">
+                    <p><strong>Número orden:</strong> @servicio.Id</p>
+                    <p><strong>Fecha:</strong> @servicio.FechaInicio.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p class="servicio-estado @estadoClase">@servicio.Estado</p>
+
+                    @if (servicio.Estado == "EnEspera")
+                    {
+                        <form asp-action="PagarCita" asp-controller="AgendadoCita" method="post">
+                            <input type="hidden" name="servicioId" value="@servicio.Id" />
+                            <button type="submit" class="btn-primary">Pagar</button>
+                        </form>
+                    }
+
+                    @if (servicio.Estado == "Pagado")
+                    {
+                        <a class="btn btn-success" href="@Url.Content($"~/comprobantes/Comprobante_{servicio.Id}.pdf")" target="_blank">Descargar Comprobante</a>
+                    }
+                </div>
+            }
+        </div>
+
     </div>
 </div>
-
