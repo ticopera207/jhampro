@@ -79,7 +79,8 @@
 
                     @if (servicio.Estado == "Pagado")
                     {
-                        <a class="btn btn-success" href="@Url.Content($"~/comprobantes/Comprobante_{servicio.Id}.pdf")" target="_blank">Descargar Comprobante</a>
+                        var path = $"/comprobantes/Comprobante_{servicio.Id}.pdf";
+                        <a class="btn btn-success" href="@path" target="_blank">Descargar Comprobante</a>
                     }
                 </div>
             }
