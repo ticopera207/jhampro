@@ -112,7 +112,7 @@ select.form-control {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s;
-  width: 100%;
+  /*width: 100%; */
   text-transform: uppercase;
   letter-spacing: 1px;
 }
