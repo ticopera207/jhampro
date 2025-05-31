@@ -1,0 +1,104 @@
+@model jhampro.Models.AgendadoCasoViewModel
+@{
+    ViewData["Title"] = "Agendar Caso Jurídico";
+
+    var clientes = Model.Clientes;
+}
+
+<link rel="stylesheet" href="~/css/cita.css" />
+
+<div class="cita-container">
+    <div class="cita-header">
+        <img src="~/imagenes/re1.png" alt="Logo Consultorio" class="cita-logo">
+        <h1>Agendar Caso Jurídico</h1>
+    </div>
+
+    <div class="cita-body">
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["MensajeExito"]
+            </div>
+        }
+
+        <form asp-action="RegistrarCaso" asp-controller="AgendadoCaso" method="post">
+            <div class="form-section">
+                <h2>Cliente </h2>
+                <select name="AbogadoId" class="form-control" required>
+                    <option value="">Seleccione un Cliente</option>
+                    @foreach (var cliente in clientes)
+                    {
+                        <option value="@cliente.Id">@($"{cliente.Nombres} {cliente.Apellidos}")</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-section">
+                <h2>Fecha y Hora</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="date" name="Fecha" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="form-group">
+                        <select name="Hora" class="form-control" required>
+                            <option value="">Seleccione una hora</option>
+                            @for (int h = 9; h < 18; h++)
+                            {
+                                <option value="@h">@($"{h}:00 - {h + 1}:00")</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="TipoServicio" value="CasoJuridico" />
+
+            <button type="submit" class="btn-primary">
+                AGENDAR
+            </button>
+        </form>
+
+        <div class="servicios-container">
+            <h2>Historial de Casos Jurídicos</h2>
+
+            @foreach (var caso in Model.Casos)
+            {
+                var estadoClase = caso.Estado == "EnEspera" ? "estado-enespera" : "estado-pagado";
+                <div class="servicio-card">
+                    <p><strong>Número de caso:</strong> @caso.Id</p>
+                    <p><strong>Fecha:</strong> @caso.FechaInicio.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p class="servicio-estado @estadoClase">@caso.Estado</p>
+
+                    @if (caso.Estado == "EnEspera")
+                    {
+                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                            <form asp-action="PagarCaso" asp-controller="AgendadoCaso" method="post" style="margin: 0;">
+                                <input type="hidden" name="servicioId" value="@caso.Id" />
+                                <button type="submit" class="btn-primary" style="min-width:120px;">Pagar</button>
+                            </form>
+                            <a asp-action="EditarCaso" asp-controller="AgendadoCaso" asp-route-servicioId="@caso.Id" class="btn btn-warning" style="min-width:90px;">
+                                Editar
+                            </a>
+                            <form asp-action="CancelarCaso" asp-controller="AgendadoCaso" method="post" style="margin: 0;" onsubmit="return confirm('¿Estás seguro de cancelar este caso jurídico?');">
+                                <input type="hidden" name="servicioId" value="@caso.Id" />
+                                <button type="submit" class="btn btn-danger" style="min-width:100px;">Cancelar</button>
+                            </form>
+                        </div>
+                    }
+
+                    @if (caso.Estado == "Pagado")
+                    {
+                        <a class="btn btn-success"
+                           href="@Url.Action("GenerarComprobante", "AgendadoCaso", new { servicioId = caso.Id })"
+                           target="_blank">
+                            Generar y Descargar Comprobante
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
