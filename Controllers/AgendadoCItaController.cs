@@ -12,11 +12,13 @@ using PayPalCheckoutSdk.Orders;
 using PayPalHttp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-using iText.IO.Font.Constants;
-using iText.Kernel.Font;
-using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Layout.Element;
+// using iText.IO.Font.Constants;
+// using iText.Kernel.Font;
+// using iText.Kernel.Pdf;
+// using iText.Layout;
+// using iText.Layout.Element;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Drawing;
 
 namespace jhampro.Controllers
 {
@@ -45,7 +47,7 @@ namespace jhampro.Controllers
                     .Where(s => s.ClienteId == clienteId)
                     .Include(s => s.Pago)
                     .ToList()
-                    };
+            };
             return View(model);
         }
 
@@ -140,7 +142,7 @@ namespace jhampro.Controllers
 
                     CancelUrl = Url.Action("CancelarPago", "AgendadoCita", new { servicioId }, Request.Scheme)
                 }
-                
+
             });
 
             var client = _payPalClientFactory.CreateClient();
@@ -179,30 +181,6 @@ namespace jhampro.Controllers
                     };
                     _context.SaveChanges();
                 }
-
-                // Generar comprobante PDF aquí (ver siguiente paso)
-                var comprobantesDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "comprobantes");
-                Directory.CreateDirectory(comprobantesDir);
-
-                // Ruta del archivo PDF
-                var pdfPath = Path.Combine(comprobantesDir, $"Comprobante_{servicio.Id}.pdf");
-
-                // Crear PDF
-                using (var writer = new PdfWriter(pdfPath))
-                {
-                    using (var pdf = new PdfDocument(writer))
-                    {
-                        var document = new Document(pdf);
-                        document.Add(new Paragraph("COMPROBANTE DE PAGO"));
-                        document.Add(new Paragraph($"Servicio ID: {servicio.Id}"));
-                        document.Add(new Paragraph($"Fecha de Pago: {servicio.FechaInicio.ToString("yyyy-MM-dd HH:mm")}"));
-                        document.Add(new Paragraph($"Monto: $50.00"));
-                        document.Add(new Paragraph($"Método: PayPal"));
-                        document.Add(new Paragraph($"Cliente ID: {servicio.ClienteId}"));
-                        document.Close();
-                    }
-                }
-
                 TempData["MensajeExito"] = "Pago realizado exitosamente.";
                 return RedirectToAction("Agendado");
             }
@@ -211,7 +189,7 @@ namespace jhampro.Controllers
             return RedirectToAction("Agendado");
         }
 
-        
+
 
         [HttpGet]
         public IActionResult CancelarPago(int servicioId)
@@ -220,5 +198,50 @@ namespace jhampro.Controllers
             return RedirectToAction("Agendado");
         }
 
+
+        [HttpGet]
+        public IActionResult GenerarComprobante(int servicioId)
+        {
+            var servicio = _context.Servicios
+                .Include(s => s.Cliente)
+                .FirstOrDefault(s => s.Id == servicioId && s.Estado == "Pagado");
+
+            if (servicio == null)
+                return NotFound("Servicio no encontrado o aún no pagado.");
+
+            var comprobantesDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "comprobantes");
+            Directory.CreateDirectory(comprobantesDir);
+
+            var pdfPath = Path.Combine(comprobantesDir, $"Comprobante_{servicio.Id}.pdf");
+
+            if (!System.IO.File.Exists(pdfPath))
+            {
+                using (var doc = new PdfDocument())
+                {
+                    var page = doc.AddPage();
+                    var gfx = XGraphics.FromPdfPage(page);
+
+                    var fontTitle = new XFont("Arial", 18, XFontStyle.Bold);
+                    var fontText = new XFont("Arial", 12, XFontStyle.Regular);
+
+                    gfx.DrawString("COMPROBANTE DE PAGO", fontTitle, XBrushes.Black,
+                        new XRect(0, 30, page.Width, 40), XStringFormats.TopCenter);
+
+                    int y = 100;
+                    int spacing = 30;
+
+                    gfx.DrawString($"Servicio ID: {servicio.Id}", fontText, XBrushes.Black, 50, y); y += spacing;
+                    gfx.DrawString($"Fecha de Pago: {servicio.FechaInicio:yyyy-MM-dd HH:mm}", fontText, XBrushes.Black, 50, y); y += spacing;
+                    gfx.DrawString($"Monto: $50.00", fontText, XBrushes.Black, 50, y); y += spacing;
+                    gfx.DrawString($"Método: PayPal", fontText, XBrushes.Black, 50, y); y += spacing;
+                    gfx.DrawString($"Cliente ID: {servicio.ClienteId}", fontText, XBrushes.Black, 50, y);
+
+                    doc.Save(pdfPath);
+                }
+            }
+
+            var pdfUrl = Url.Content($"~/comprobantes/Comprobante_{servicio.Id}.pdf");
+            return Redirect(pdfUrl);
+        }
     }
 }
