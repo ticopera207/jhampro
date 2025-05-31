@@ -1,0 +1,60 @@
+@model jhampro.Models.Servicio
+@using jhampro.Models
+@{
+    ViewData["Title"] = "Editar Cita";
+    var abogados = ViewBag.Abogados as List<jhampro.Models.Usuario>;
+    var fechaLocal = Model.FechaInicio.ToLocalTime();
+    var abogadoIdSeleccionado = Model.AbogadoServicios?.FirstOrDefault()?.UsuarioId ?? 0;
+}
+<link rel="stylesheet" href="~/css/cita.css" />
+
+<div class="cita-container">
+    <div class="cita-header">
+        <img src="~/imagenes/re1.png" alt="Logo Consultorio" class="cita-logo">
+        <h1>Editar Cita</h1>
+    </div>
+    <div class="cita-body">
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+        <form asp-action="EditarCita" method="post">
+            <input type="hidden" name="Id" value="@Model.Id" />
+
+            <div class="form-section">
+                <div class="form-group mb-3">
+                    <label>Abogado</label>
+                    <select name="AbogadoId" class="form-control" required>
+                        <option value="">Seleccione un abogado</option>
+                        @{
+                            foreach (var abogado in abogados)
+                            {
+                                var selected = abogado.Id == abogadoIdSeleccionado ? "selected" : "";
+                                @:<option value="@abogado.Id" @selected>@($"{abogado.Nombres} {abogado.Apellidos}")</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Fecha</label>
+                    <input type="date" name="Fecha" class="form-control" value="@fechaLocal.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="form-group mb-3">
+                    <label>Hora</label>
+                    <select name="Hora" class="form-control" required>
+                        <option value="">Seleccione una hora</option>
+                        @{
+                            for (int h = 9; h < 18; h++)
+                            {
+                                var selected = fechaLocal.Hour == h ? "selected" : "";
+                                @:<option value="@h" @selected>@($"{h}:00 - {h + 1}:00")</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary" style="min-width:120px;">Guardar Cambios</button>
+                <a asp-action="Agendado" class="btn btn-secondary" style="min-width:100px;">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
