@@ -1,0 +1,48 @@
+@model List<jhampro.Models.Servicio>
+
+@{
+    ViewData["Title"] = "Historial de Citas";
+}
+
+<h2>Historial de Citas</h2>
+
+@if (!Model.Any())
+{
+    <p>No tienes citas registradas.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Abogado(s)</th>
+                <th>Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var cita in Model)
+        {
+            var fecha = cita.FechaInicio.ToLocalTime().ToString("dd/MM/yyyy");
+            var hora = cita.FechaInicio.ToLocalTime().ToString("HH:mm");
+            var abogados = cita.AbogadoServicios.Select(a => a.Abogado.Nombres + " " + a.Abogado.Apellidos).ToList();
+
+            <tr>
+                <td>@cita.Id</td>
+                <td>@fecha</td>
+                <td>@hora</td>
+                <td>@cita.Estado</td>
+                <td>
+                    @string.Join(", ", abogados)
+                </td>
+                <td>
+                    @(cita.Pago != null ? $"${cita.Pago.Monto}" : "No pagado")
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
