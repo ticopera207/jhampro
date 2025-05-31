@@ -1,65 +1,149 @@
 ﻿@{
     ViewData["Title"] = "Nosotros";
 }
-<h1 class="text-center my-4">@ViewData["Title"]</h1>
+<h1 class="text-center my-5 display-4 fw-bold text-main">@ViewData["Title"]</h1>
 
 <style>
-    .img-ajustada {
-        height: 300px;
-        object-fit: cover;
-        width: 100%;
+    body {
+        background-color: #ffffff;
+        color: #333333;
+    }
+
+    .text-main {
+        color: #b89570;
     }
 
     .text-justify {
         text-align: justify;
     }
+
+    .seccion {
+        padding: 3rem 0;
+    }
+
+    .img-ajustada {
+        height: 100%;
+        max-height: 350px;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .img-ajustada:hover {
+        transform: scale(1.02);
+    }
+
+    .valor-icono {
+        font-size: 2rem;
+        color: #b89570;
+        margin-bottom: 0.5rem;
+    }
+
+    .valor-card {
+        padding: 1.5rem;
+        background-color: #f9f9f9;
+        border-left: 4px solid #b89570;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .valor-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .bg-dark-section {
+        background-color: #071b26;
+        color: #ffffff;
+    }
+
+    .bg-dark-section .text-main,
+    .bg-dark-section h3 {
+        color: #b89570;
+    }
 </style>
 
-<div class="container my-5">
-    <!-- VISIÓN -->
-    <div class="row align-items-center mb-5">
-        <div class="col-md-6">
-            <img src="~/imagenes/1s.jpg" alt="Visión - bufete de abogados" class="img-ajustada rounded shadow-sm" />
+<!-- ACERCA DE NOSOTROS -->
+<div class="container-fluid bg-dark-section seccion">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- TEXTO A LA IZQUIERDA -->
+            <div class="col-md-6 mb-4 mb-md-0">
+                <h3 class="fw-bold text-main mb-3">Acerca de nosotros</h3>
+                <p class="text-justify">
+                    Somos un bufete de abogados comprometido con brindar soluciones jurídicas de alta calidad, guiados por los valores de ética, compromiso y excelencia. Nuestro equipo de profesionales altamente calificados se especializa en diversas áreas del derecho, ofreciendo una atención personalizada y estrategias legales efectivas.
+                </p>
+                <p class="text-justify mb-0">
+                    Trabajamos con responsabilidad para proteger los intereses de nuestros clientes, construyendo relaciones de confianza duraderas tanto a nivel nacional como internacional.
+                </p>
+            </div>
+
+            <!-- IMAGEN A LA DERECHA -->
+            <div class="col-md-6">
+                <img src="~/imagenes/3s.jpg" alt="Nuestro equipo legal" class="img-ajustada" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VISIÓN -->
+<div class="container seccion">
+    <div class="row align-items-center">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <img src="~/imagenes/1s.jpg" alt="Visión - bufete de abogados" class="img-ajustada" />
         </div>
         <div class="col-md-6">
-            <h3 class="fw-bold">Nuestra visión:</h3>
+            <h3 class="fw-bold text-main">Nuestra visión</h3>
             <p class="text-justify">
                 Ser el bufete de abogados líder en soluciones jurídicas integrales, reconocido por su excelencia profesional, ética y compromiso con la justicia, brindando confianza y resultados a nuestros clientes a nivel nacional e internacional.
             </p>
         </div>
     </div>
-
-    <!-- MISIÓN -->
-    <div class="row align-items-center flex-md-row-reverse">
-        <div class="col-md-6">
-            <img src="~/imagenes/2s.jpg" alt="Misión - bufete de abogados" class="img-ajustada rounded shadow-sm" />
-        </div>
-        <div class="col-md-6">
-            <h3 class="fw-bold">Nuestra misión:</h3>
-            <p class="text-justify">
-                Brindar asesoría y representación legal de alta calidad a nuestros clientes, con un enfoque personalizado, ético y eficaz. Nos comprometemos a proteger los derechos e intereses de cada persona o empresa, ofreciendo soluciones jurídicas confiables en diversas áreas del derecho.
-            </p>
-        </div>
-    </div>
 </div>
-<!-- valores -->
-<div class="my-5">
-    <h3 class="fw-bold text-center mb-4">Nuestros valores</h3>
-    <div class="row text-center">
-        <div class="col-md-4">
-            <h5 class="fw-semibold">Ética</h5>
-            <p class="text-justify">Actuamos con integridad en cada caso que asumimos, respetando las normas legales y morales.</p>
-        </div>
-        <div class="col-md-4">
-            <h5 class="fw-semibold">Compromiso</h5>
-            <p class="text-justify">Nos involucramos a fondo con nuestros clientes, defendiendo sus intereses como propios.</p>
-        </div>
-        <div class="col-md-4">
-            <h5 class="fw-semibold">Excelencia</h5>
-            <p class="text-justify">Brindamos un servicio jurídico de alta calidad y buscamos resultados favorables.</p>
+
+<!-- MISIÓN -->
+<div class="container-fluid bg-dark-section seccion">
+    <div class="container">
+        <div class="row align-items-center flex-md-row-reverse">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <img src="~/imagenes/2s.jpg" alt="Misión - bufete de abogados" class="img-ajustada" />
+            </div>
+            <div class="col-md-6">
+                <h3 class="fw-bold">Nuestra misión</h3>
+                <p class="text-justify">
+                    Brindar asesoría y representación legal de alta calidad a nuestros clientes, con un enfoque personalizado, ético y eficaz. Nos comprometemos a proteger los derechos e intereses de cada persona o empresa, ofreciendo soluciones jurídicas confiables en diversas áreas del derecho.
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
-
-
+<!-- VALORES -->
+<div class="container seccion text-center">
+    <h3 class="fw-bold text-main mb-5">Nuestros valores</h3>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="valor-card">
+                <div class="valor-icono">⚖️</div>
+                <h5 class="fw-semibold">Ética</h5>
+                <p class="text-justify">Actuamos con integridad en cada caso que asumimos, respetando las normas legales y morales.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="valor-card">
+                <div class="valor-icono">🤝</div>
+                <h5 class="fw-semibold">Compromiso</h5>
+                <p class="text-justify">Nos involucramos a fondo con nuestros clientes, defendiendo sus intereses como propios.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="valor-card">
+                <div class="valor-icono">🌟</div>
+                <h5 class="fw-semibold">Excelencia</h5>
+                <p class="text-justify">Brindamos un servicio jurídico de alta calidad y buscamos resultados favorables.</p>
+            </div>
+        </div>
+    </div>
+</div>
