@@ -11,21 +11,34 @@
         <h2>Formulario de Registro</h2>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <form asp-action="Registrarse" method="post">
+            
+            
+            
             <div class="form-group mb-3">
-                <label asp-for="Nombres"></label>
-                <input asp-for="Nombres" class="form-control" />
-                <span asp-validation-for="Nombres" class="text-danger small"></span>
-            </div>
+        <label asp-for="Dni"></label>
+         <div class="input-group">
+        <input asp-for="Dni" class="form-control" id="dniInput" />
+        <button type="button" class="btn btn-outline-secondary" id="btnVerificar">Verificar</button>
+        </div>
+        <span asp-validation-for="Dni" class="text-danger small"></span>
+        </div>
+            
+            
+            
             <div class="form-group mb-3">
-                <label asp-for="Apellidos"></label>
-                <input asp-for="Apellidos" class="form-control" />
-                <span asp-validation-for="Apellidos" class="text-danger small"></span>
+            <label asp-for="Nombres"></label>
+            <input asp-for="Nombres" class="form-control" id="nombresInput" />
+            <span asp-validation-for="Nombres" class="text-danger small"></span>
             </div>
+            
             <div class="form-group mb-3">
-                <label asp-for="Dni"></label>
-                <input asp-for="Dni" class="form-control" />
-                <span asp-validation-for="Dni" class="text-danger small"></span>
+            <label asp-for="Apellidos"></label>
+            <input asp-for="Apellidos" class="form-control" id="apellidosInput" />
+            <span asp-validation-for="Apellidos" class="text-danger small"></span>
             </div>
+
+    
+            
             <div class="form-group mb-3">
                 <label asp-for="Correo"></label>
                 <input asp-for="Correo" type="email" class="form-control" />
@@ -51,4 +64,29 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("btnVerificar").addEventListener("click", function () {
+            const dni = document.getElementById("dniInput").value;
+
+            if (dni.length !== 8) {
+                alert("El DNI debe tener 8 dígitos.");
+                return;
+            }
+
+            fetch(`/Usuario/VerificarDni?dni=${dni}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.nombres) {
+                        document.getElementById("nombresInput").value = data.nombres;
+                        document.getElementById("apellidosInput").value = `${data.apellidoPaterno} ${data.apellidoMaterno}`;
+                    } else {
+                        alert("DNI no encontrado.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Error al consultar el DNI.");
+                });
+        });
+    </script>
 }
