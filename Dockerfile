@@ -3,13 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /src
 
 # Copiar csproj
-COPY ./jhampro/Jham.csproj ./jhampro/
-WORKDIR /src/jhampro
+COPY Jham.csproj ./
 RUN dotnet restore
 
-# Copiar el resto del proyecto
-COPY ./jhampro/. .
-
+# Copiar el resto del código
+COPY . ./
 RUN dotnet publish -c Release -o /app/publish
 
 # Etapa 2: Runtime
