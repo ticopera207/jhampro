@@ -108,6 +108,65 @@ namespace jhampro.Controllers
             return RedirectToAction("Agendado");
         }
 
+        [HttpGet]
+        public IActionResult EditarCita(int servicioId)
+        {
+            var servicio = _context.Servicios
+                .Include(s => s.AbogadoServicios)
+                .FirstOrDefault(s => s.Id == servicioId && s.Estado == "EnEspera");
+            if (servicio == null)
+                return NotFound();
+
+            var abogados = _context.Usuarios.Where(u => u.TipoUsuario == "Abogado").ToList();
+            ViewBag.Abogados = abogados;
+            return View(servicio);
+        }
+
+        [HttpPost]
+        public IActionResult EditarCita(int Id, int AbogadoId, DateTime Fecha, int Hora)
+        {
+            var servicio = _context.Servicios
+                .Include(s => s.AbogadoServicios)
+                .FirstOrDefault(s => s.Id == Id && s.Estado == "EnEspera");
+            if (servicio == null)
+                return NotFound();
+
+            // Actualizar fecha/hora
+            var localDateTime = new DateTime(Fecha.Year, Fecha.Month, Fecha.Day, Hora, 0, 0, DateTimeKind.Unspecified);
+            var peruTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
+            var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(localDateTime, peruTimeZone);
+            var fechaFin = fechaInicio.AddHours(1);
+
+            servicio.FechaInicio = fechaInicio;
+            servicio.FechaFin = fechaFin;
+
+            // Actualizar abogado
+            var abogadoServicio = servicio.AbogadoServicios.FirstOrDefault();
+            if (abogadoServicio != null)
+                abogadoServicio.UsuarioId = AbogadoId;
+
+            _context.SaveChanges();
+            TempData["MensajeExito"] = "Cita editada correctamente.";
+            return RedirectToAction("Agendado");
+        }
+
+        [HttpPost]
+        public IActionResult CancelarCita(int servicioId)
+        {
+            var servicio = _context.Servicios.FirstOrDefault(s => s.Id == servicioId && s.Estado == "EnEspera");
+            if (servicio == null)
+            {
+                TempData["MensajeError"] = "No se pudo cancelar la cita.";
+                return RedirectToAction("Agendado");
+            }
+
+            servicio.Estado = "Cancelado";
+            _context.SaveChanges();
+
+            TempData["MensajeExito"] = "La cita fue cancelada correctamente.";
+            return RedirectToAction("Agendado");
+        }
+
         [HttpPost]
         public async Task<IActionResult> PagarCita(int servicioId)
         {

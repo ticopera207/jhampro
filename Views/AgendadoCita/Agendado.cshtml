@@ -69,12 +69,21 @@
                     <p><strong>Fecha:</strong> @servicio.FechaInicio.ToString("dd/MM/yyyy HH:mm")</p>
                     <p class="servicio-estado @estadoClase">@servicio.Estado</p>
 
-                    @if (servicio.Estado == "EnEspera")
+                   @if (servicio.Estado == "EnEspera")
                     {
-                        <form asp-action="PagarCita" asp-controller="AgendadoCita" method="post">
-                            <input type="hidden" name="servicioId" value="@servicio.Id" />
-                            <button type="submit" class="btn-primary">Pagar</button>
-                        </form>
+                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 10px;">
+                            <form asp-action="PagarCita" asp-controller="AgendadoCita" method="post" style="margin: 0;">
+                                <input type="hidden" name="servicioId" value="@servicio.Id" />
+                                <button type="submit" class="btn-primary" style="min-width:120px;">Pagar</button>
+                            </form>
+                            <a asp-action="EditarCita" asp-controller="AgendadoCita" asp-route-servicioId="@servicio.Id" class="btn btn-warning" style="min-width:90px;">
+                                Editar
+                            </a>
+                            <form asp-action="CancelarCita" asp-controller="AgendadoCita" method="post" style="margin: 0;" onsubmit="return confirm('¿Estás seguro de cancelar esta cita?');">
+                                <input type="hidden" name="servicioId" value="@servicio.Id" />
+                                <button type="submit" class="btn btn-danger" style="min-width:100px;">Cancelar</button>
+                            </form>
+                        </div>
                     }
 
                     @if (servicio.Estado == "Pagado")
