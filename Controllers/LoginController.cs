@@ -29,11 +29,23 @@ namespace jhampro.Controllers
 
             if (usuario != null)
             {
-                // Aquí puedes guardar información en la sesión si deseas
-            HttpContext.Session.SetString("UsuarioNombre", usuario.Nombres);
-            HttpContext.Session.SetString("TipoUsuario", usuario.TipoUsuario);
-            HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
-                return RedirectToAction("Index", "Home"); // Redirige a tu página principal
+                HttpContext.Session.SetString("UsuarioNombre", usuario.Nombres);
+                HttpContext.Session.SetString("TipoUsuario", usuario.TipoUsuario);
+                HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
+
+                if (usuario.TipoUsuario == "Administrador")
+                {
+                    return RedirectToAction("Admin", "Admin"); // Asegúrate de tener esta vista/controlador
+                }
+                else if (usuario.TipoUsuario == "Abogado")
+                {
+                    return RedirectToAction("Home", "Home");
+                }
+                else
+                {
+                    _logger.LogInformation("Ingresando CLIENTE ✅");
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
             ViewBag.Error = "Correo o contraseña incorrectos.";
@@ -47,8 +59,8 @@ namespace jhampro.Controllers
         }
         public IActionResult Logout()
         {
-        HttpContext.Session.Clear(); // Elimina todas las variables de sesión
-        return RedirectToAction("Index", "Home");
+            HttpContext.Session.Clear(); // Elimina todas las variables de sesión
+            return RedirectToAction("Index", "Home");
         }
     }
 }
