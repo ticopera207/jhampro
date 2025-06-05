@@ -52,6 +52,15 @@
         <li class="nav-item">
             <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Historial" asp-action="Citas">Historial Cita</a>
         </li>
+
+
+        @if (HttpContextAccessor.HttpContext.Session.GetString("TipoUsuario") == "Administrador")
+        {
+        <li class="nav-item">
+            <a class="nav-link text-white fw-semibold" asp-controller="Admin" asp-action="Admin">Panel Admin</a>
+        </li>
+        }
+
         <li class="nav-item">
             <a class="nav-link text-white fw-semibold" asp-controller="Login" asp-action="Logout">Cerrar sesión</a>
         </li>
