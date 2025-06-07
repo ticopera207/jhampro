@@ -1,3 +1,15 @@
-<h2>Registro exitoso</h2>
-<p>El usuario ha sido registrado correctamente.</p>
-<a asp-controller="Home" asp-action="Index">Volver al inicio</a>
+@{
+    ViewData["Title"] = "Registro exitoso";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow" style="width: 400px; position: relative;">
+        <div class="card-body">
+            <h3 class="card-title text-center text-success">¡Registro exitoso!</h3>
+            <p class="card-text text-center mt-3">Su cuenta ha sido creada correctamente.</p>
+        </div>
+        <div class="card-footer bg-white border-0 d-flex justify-content-end">
+            <a href="/" class="btn btn-primary">Volver al inicio</a>
+        </div>
+    </div>
+</div>
