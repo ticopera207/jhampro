@@ -16,6 +16,8 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        TempData["CasoOK"] = "Caso OK correcto";
+        
         return View();
     }
 

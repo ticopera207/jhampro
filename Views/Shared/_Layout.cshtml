@@ -36,6 +36,16 @@
 
                 @if (HttpContextAccessor.HttpContext.Session.GetString("UsuarioNombre") != null)
                     {
+
+            @* acá pones addEventListener codigo *@
+            @if (TempData["CasoOK"] != null)
+            {
+                <script>
+                    window.addEventListener('DOMContentLoaded', (event) => {
+                        alert('@TempData["CasoOK"]');
+                    });
+                </script>
+            }
         <!-- Usuario logueado -->
         <li class="nav-item">
             <span class="nav-link text-white">Bienvenido, @HttpContextAccessor.HttpContext.Session.GetString("UsuarioNombre")</span>
