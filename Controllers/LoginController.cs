@@ -30,6 +30,9 @@ namespace jhampro.Controllers
             if (usuario != null)
             {
                 HttpContext.Session.SetString("UsuarioNombre", usuario.Nombres);
+                HttpContext.Session.SetString("apellidosAbogado", usuario.Apellidos);
+                 HttpContext.Session.SetString("Celular", usuario.Celular);
+                 HttpContext.Session.SetString("Correo", usuario.Correo);
                 HttpContext.Session.SetString("TipoUsuario", usuario.TipoUsuario);
                 HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
 
