@@ -46,5 +46,7 @@ namespace jhampro.Models
 
         // Relación muchos a muchos (Abogado a Servicio)
         public ICollection<AbogadoServicio> AbogadoServicios { get; set; } = new List<AbogadoServicio>();
+
+        public string Especialidad { get; set; } = "ClienteNormal";
     }
 }
