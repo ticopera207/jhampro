@@ -1,9 +1,8 @@
 @model jhampro.Models.AgendadoCitaViewModel
 @{
     ViewData["Title"] = "Agendar Cita";
-
-    @* var abogados = ViewBag.Abogados as IEnumerable<dynamic> ?? new List<dynamic>(); *@
     var abogados = Model.Abogados;
+    var especialidades = abogados.Select(a => a.Especialidad).Distinct().ToList();
 }
 <link rel="stylesheet" href="~/css/cita.css" />
 <div class="cita-container">
@@ -24,13 +23,20 @@
 
         <form asp-action="RegistrarCita" method="post">
             <div class="form-section">
-                <h2>Abogado</h2>
-                <select name="AbogadoId" class="form-control" required>
-                    <option value="">Seleccione un abogado</option>
-                    @foreach (var abogado in abogados)
+                <h2>Especialidad</h2>
+                <select id="especialidadSelect" class="form-control" required>
+                    <option value="">Seleccione una especialidad</option>
+                    @foreach (var esp in especialidades)
                     {
-                        <option value="@abogado.Id">@($"{abogado.Nombres} {abogado.Apellidos}")</option>
+                        <option value="@esp">@esp</option>
                     }
+                </select>
+            </div>
+            <div class="form-section">
+                <h2>Abogado</h2>
+                <select name="AbogadoId" id="abogadoSelect" class="form-control" required>
+                    <option value="">Seleccione un abogado</option>
+                    @* Opciones llenadas por JS *@
                 </select>
             </div>
 
@@ -43,13 +49,24 @@
                     <div class="form-group">
                         <select name="Hora" class="form-control" required>
                             <option value="">Seleccione una hora</option>
-                            @for (int h = 9; h < 18; h++)
-                            {
-                                <option value="@h">@($"{h}:00 - {h + 1}:00")</option>
-                            }
+                            <option value="09:00">09:00 - 10:00</option>
+                            <option value="10:00">10:00 - 11:00</option>
+                            <option value="11:00">11:00 - 12:00</option>
+                            <option value="13:00">13:00 - 14:00</option>
+                            <option value="14:00">14:00 - 15:00</option>
+                            <option value="15:00">15:00 - 16:00</option>
+                            <option value="16:00">16:00 - 17:00</option>
+                            <option value="17:00">17:00 - 18:00</option>
                         </select>
                     </div>
                 </div>
+            </div>
+
+            <div class="form-check" style="margin: 15px 0;">
+                <input type="checkbox" class="form-check-input" id="Terminos" name="Terminos" required />
+                <label class="form-check-label" for="Terminos">
+                    Confirmo que la información ingresada es verídica y acepto los <a href="#">términos y condiciones</a> del servicio.
+                </label>
             </div>
 
             <input type="hidden" name="TipoServicio" value="Cita" />
@@ -101,3 +118,26 @@
 
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Serializar los abogados a JS
+        const abogados = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(abogados));
+        const abogadoSelect = document.getElementById('abogadoSelect');
+        const especialidadSelect = document.getElementById('especialidadSelect');
+
+        especialidadSelect.addEventListener('change', function () {
+            const especialidad = this.value;
+            abogadoSelect.innerHTML = '<option value="">Seleccione un abogado</option>';
+            if (especialidad) {
+                abogados.filter(a => a.Especialidad === especialidad)
+                    .forEach(function (abogado) {
+                        const option = document.createElement('option');
+                        option.value = abogado.Id;
+                        option.text = abogado.Nombres + ' ' + abogado.Apellidos;
+                        abogadoSelect.appendChild(option);
+                    });
+            }
+        });
+    </script>
+}
