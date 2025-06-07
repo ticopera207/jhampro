@@ -29,6 +29,9 @@ namespace jhampro.Controllers
 
             // Puedes enviar datos a la vista con ViewBag o un modelo
             ViewBag.UsuarioNombre = HttpContext.Session.GetString("UsuarioNombre");
+            ViewBag.apellidosAbogado=HttpContext.Session.GetString("apellidosAbogado");
+            ViewBag.Celular=HttpContext.Session.GetString("Celular");
+            ViewBag.Correo=HttpContext.Session.GetString("Correo");
 
             return View();
         }
