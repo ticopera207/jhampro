@@ -12,6 +12,16 @@
         <h1>Agendar Cita</h1>
     </div>
 
+    @* acá pones addEventListener codigo *@
+    @if (TempData["CasoOK"] != null)
+    {
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                alert('@TempData["CasoOK"]');
+            });
+        </script>
+    }
+
     <div class="cita-body">
         @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 

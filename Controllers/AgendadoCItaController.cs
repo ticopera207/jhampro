@@ -36,10 +36,12 @@ namespace jhampro.Controllers
         [HttpGet]
         public IActionResult Agendado()
         {
+            TempData["CasoOK"] = "Caso OK correcto";
+            
             int? clienteId = HttpContext.Session.GetInt32("UsuarioId");
-
+            
             var model = new AgendadoCitaViewModel
-            {
+            {                
                 Abogados = _context.Usuarios
                     .Where(u => u.TipoUsuario == "Abogado")
                     .ToList(),
