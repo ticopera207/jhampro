@@ -1,0 +1,94 @@
+@model Dictionary<string, int>
+@{
+    ViewData["Title"] = "Mis Estadísticas";
+}
+
+<h2 style="margin-bottom: 20px; color: #333;">Mis Estadísticas de Citas</h2>
+
+<form method="get" asp-action="MisEstadisticas" asp-controller="AgendadoCita" style="margin-bottom: 30px;">
+    <label><strong>Desde:</strong></label>
+    <input type="date" name="desde" value="@ViewBag.Desde?.ToString("yyyy-MM-dd")" style="margin-right: 15px;" />
+    <label><strong>Hasta:</strong></label>
+    <input type="date" name="hasta" value="@ViewBag.Hasta?.ToString("yyyy-MM-dd")" style="margin-right: 15px;" />
+    <button type="submit" style="padding: 6px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">Filtrar</button>
+
+</form>
+
+<div style="width: 100%; max-width: 700px; margin: auto;">
+    <canvas id="estadoCitasChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = @Html.Raw(Json.Serialize(Model.Keys));
+    const data = @Html.Raw(Json.Serialize(Model.Values));
+
+    const backgroundColors = [
+        'rgba(255, 206, 86, 0.7)',  // EnEspera
+        'rgba(255, 99, 132, 0.7)',  // Cancelado
+        'rgba(75, 192, 192, 0.7)',  // Pagado
+        'rgba(153, 102, 255, 0.7)', // Otro (si hay más estados)
+        'rgba(54, 162, 235, 0.7)'
+    ];
+
+    const borderColors = backgroundColors.map(color => color.replace('0.7', '1'));
+
+    new Chart(document.getElementById('estadoCitasChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Estado de mis citas',
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1,
+                borderRadius: 8,
+                barPercentage: 0.6,
+                categoryPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Resumen por Estado de Cita',
+                    font: {
+                        size: 18
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 30
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#333',
+                    titleColor: '#fff',
+                    bodyColor: '#fff'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    },
+                    title: {
+                        display: true,
+                        text: 'Cantidad'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Estado'
+                    }
+                }
+            }
+        }
+    });
+</script>
