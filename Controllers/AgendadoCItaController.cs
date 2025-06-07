@@ -302,5 +302,74 @@ namespace jhampro.Controllers
             var pdfUrl = Url.Content($"~/comprobantes/Comprobante_{servicio.Id}.pdf");
             return Redirect(pdfUrl);
         }
+        [HttpGet]
+        public IActionResult MisEstadisticas(DateTime? desde, DateTime? hasta)
+        {
+            desde = desde.HasValue ? DateTime.SpecifyKind(desde.Value, DateTimeKind.Utc) : null;
+            hasta = hasta.HasValue ? DateTime.SpecifyKind(hasta.Value, DateTimeKind.Utc).AddDays(1).AddSeconds(-1) : null;
+
+            int? clienteId = HttpContext.Session.GetInt32("UsuarioId");
+            if (clienteId == null)
+                return RedirectToAction("Login", "Login");
+
+            var query = _context.Servicios
+                .Where(s => s.ClienteId == clienteId && s.TipoServicio == "Cita");
+
+            if (desde.HasValue)
+                query = query.Where(s => s.FechaInicio >= desde.Value);
+
+            if (hasta.HasValue)
+                query = query.Where(s => s.FechaInicio <= hasta.Value);
+
+            var estadisticas = query
+                .GroupBy(s => s.Estado)
+                .Select(g => new
+                {
+                    Estado = g.Key,
+                    Total = g.Count()
+                })
+                .ToDictionary(x => x.Estado, x => x.Total);
+
+            ViewBag.Desde = desde;
+            ViewBag.Hasta = hasta;
+
+            return View("~/Views/AgendadoCita/Estadisticas.cshtml", estadisticas);
+        }
+        [HttpGet]
+        public IActionResult Estadisticas(DateTime? desde, DateTime? hasta)
+        {
+            int? clienteId = HttpContext.Session.GetInt32("UsuarioId");
+            if (clienteId == null)
+                return RedirectToAction("Login", "Login");
+
+            // Rango por defecto: últimos 30 días si no se envían fechas
+            DateTime fechaInicio = desde ?? DateTime.UtcNow.AddDays(-30);
+            DateTime fechaFin = hasta?.AddDays(1).AddSeconds(-1) ?? DateTime.UtcNow;
+
+            // Guardar fechas para mostrarlas en los inputs
+            ViewBag.Desde = fechaInicio;
+            ViewBag.Hasta = fechaFin;
+
+            // Consulta de estadísticas
+            var servicios = _context.Servicios
+                .Where(s => s.ClienteId == clienteId &&
+                            s.FechaInicio >= fechaInicio &&
+                            s.FechaInicio <= fechaFin)
+                .ToList();
+
+            var estadisticas = servicios
+                .GroupBy(s => s.Estado)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            // Asegurar que siempre haya datos para cada estado
+            string[] estados = { "EnEspera", "Cancelado", "Pagado" };
+            foreach (var estado in estados)
+            {
+                if (!estadisticas.ContainsKey(estado))
+                    estadisticas[estado] = 0;
+            }
+
+            return View(estadisticas);
+        }
     }
 }
