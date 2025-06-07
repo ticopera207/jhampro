@@ -41,6 +41,19 @@ public class ApplicationDbContext : DbContext
             .WithOne(p => p.Servicio)
             .HasForeignKey<Pago>(p => p.ServicioId);
         
+        // Relación uno a uno (Retroalimentación a Servicio)
+        modelBuilder.Entity<Servicio>()
+            .HasOne(r => r.Retroalimentacion)
+            .WithOne(p => p.Servicio)
+            .HasForeignKey<Retroalimentacion>(p => p.ServicioId);
+        
+        // Relación uno a muchos (Servicio a Documento)
+        modelBuilder.Entity<Documento>()
+            .HasOne(d => d.Servicio)
+            .WithMany(s => s.Documentos)
+            .HasForeignKey(d => d.ServicioId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         base.OnModelCreating(modelBuilder);
     }
 

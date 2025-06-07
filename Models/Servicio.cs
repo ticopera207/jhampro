@@ -27,5 +27,11 @@ namespace jhampro.Models
 
         // Relación uno a uno (Pago)
         public Pago? Pago { get; set; }
+
+        // Relación uno a uno (Retroalimentación)
+        public Retroalimentacion? Retroalimentacion { get; set; }
+
+        // Relación uno a muchos (Servicio a Documento)
+        public ICollection<Documento> Documentos { get; set; }
     }
 }
