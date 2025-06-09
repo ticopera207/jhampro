@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "Panel del Abogado";
+
+}
+@model jhampro.Models.Usuario
+
+<div class="container perfil-container">
+    <h2>Bienvenido, @ViewBag.UsuarioNombre</h2>
+    <p>Este es tu panel como Abogado.</p>
+    <div class="row">
+        <!-- Columna izquierda -->
+        <div class="col-md-4">
+            <div class="profile-box text-center">
+                <img src="https://via.placeholder.com/150" class="profile-img" id="preview" alt="Foto de perfil" />
+                <input type="file" id="foto" class="form-control mt-2" onchange="previewImage(event)" />
+                @* <div class="mt-3">
+                    <p><strong>Sitio Web:</strong></p>
+                    <a href="https://github.com/sergio-gonzalez11" target="_blank">github.com/sergio-gonzalez11</a>
+                </div>
+                <div class="activity mt-4 text-start">
+                    <p><strong>Actividad</strong></p>
+                    <ul class="list-group">
+                        <li class="list-group-item">Shares <span class="badge bg-primary float-end">125</span></li>
+                        <li class="list-group-item">Likes <span class="badge bg-success float-end">13</span></li>
+                        <li class="list-group-item">Posts <span class="badge bg-info float-end">37</span></li>
+                        <li class="list-group-item">Followers <span class="badge bg-dark float-end">78</span></li>
+                    </ul>
+                </div> *@
+            </div>
+        </div>
+
+        <!-- Columna derecha -->
+        <div class="col-md-8">
+            <form id="perfilForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" placeholder="@ViewBag.UsuarioNombre" name="nombre" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Apellidos</label>
+                        <input type="text" class="form-control" placeholder="@ViewBag.apellidosAbogado" name="apellidos" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Teléfono</label>
+                        <input type="text" class="form-control" placeholder="@ViewBag.Celular" name="telefono" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Email</label>
+                        <input type="email" class="form-control" placeholder="@ViewBag.Correo" name="email" />
+                    </div>
+                    @* <div class="col-md-6">
+                        <label>Ciudad</label>
+                        <input type="text" class="form-control" placeholder="ciudad" name="ciudad" />
+                    </div> *@
+                    <div class="col-md-6">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" name="password" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Verifica la contraseña</label>
+                        <input type="password" class="form-control" name="password2" />
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-danger" onclick="document.getElementById('perfilForm').reset();">Limpiar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
