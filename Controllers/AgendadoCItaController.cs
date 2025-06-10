@@ -140,10 +140,20 @@ namespace jhampro.Controllers
             servicio.FechaInicio = fechaInicio;
             servicio.FechaFin = fechaFin;
 
-            // Actualizar abogado
+            // Actualizar abogado (eliminar y crear nuevo)
             var abogadoServicio = servicio.AbogadoServicios.FirstOrDefault();
             if (abogadoServicio != null)
-                abogadoServicio.UsuarioId = AbogadoId;
+            {
+                _context.AbogadoServicio.Remove(abogadoServicio);
+                _context.SaveChanges();
+            }
+            // Agregar el nuevo abogado
+            var nuevoAbogadoServicio = new AbogadoServicio
+            {
+                UsuarioId = AbogadoId,
+                ServicioId = servicio.Id
+            };
+            _context.AbogadoServicio.Add(nuevoAbogadoServicio);
 
             _context.SaveChanges();
             TempData["MensajeExito"] = "Cita editada correctamente.";
