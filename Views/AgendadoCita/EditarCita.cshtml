@@ -58,8 +58,9 @@
                         @{
                             for (int h = 9; h < 18; h++)
                             {
-                                var selected = fechaLocal.Hour == h ? "selected" : "";
-                                @:<option value="@h" @selected>@($"{h}:00 - {h + 1}:00")</option>
+                                var value = $"{h:D2}:00";
+                                var selected = fechaLocal.ToString("HH:mm") == value ? "selected" : "";
+                                @:<option value="@value" @selected>@($"{h}:00 - {h + 1}:00")</option>
                             }
                         }
                     </select>
