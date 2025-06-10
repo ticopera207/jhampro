@@ -81,9 +81,11 @@
             @foreach (var servicio in Model.Servicios)
             {
                 var estadoClase = servicio.Estado == "EnEspera" ? "estado-enespera" : "estado-pagado";
+                var peruTz = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
+                var fechaPeru = TimeZoneInfo.ConvertTimeFromUtc(servicio.FechaInicio, peruTz);
                 <div class="servicio-card">
                     <p><strong>Número orden:</strong> @servicio.Id</p>
-                    <p><strong>Fecha:</strong> @servicio.FechaInicio.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p><strong>Fecha:</strong> @fechaPeru.ToString("dd/MM/yyyy HH:mm")</p>
                     <p class="servicio-estado @estadoClase">@servicio.Estado</p>
 
                    @if (servicio.Estado == "EnEspera")
