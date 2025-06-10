@@ -12,11 +12,6 @@ using PayPalCheckoutSdk.Orders;
 using PayPalHttp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-// using iText.IO.Font.Constants;
-// using iText.Kernel.Font;
-// using iText.Kernel.Pdf;
-// using iText.Layout;
-// using iText.Layout.Element;
 using PdfSharpCore.Pdf;
 using PdfSharpCore.Drawing;
 
@@ -51,38 +46,22 @@ namespace jhampro.Controllers
             return View(model);
         }
 
-        /*
-        //CORREGIR ESTE MÉTODO
-        [HttpPost]
-        public IActionResult RegistrarCita(Servicio servicio)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Servicios.Add(servicio);
-                _context.SaveChanges();
-                return RedirectToAction("","");
-            }
-
-            ViewBag.Abogados = _context.Usuarios
-                .Select(a => new { a.Id, Nombre = a.Nombres + " " + a.Apellidos })
-                .ToList();
-            return View("Agendado", servicio);
-        }*/
-
-        [HttpPost]
-        public IActionResult RegistrarCita(int AbogadoId, DateTime Fecha, int Hora)
+    [HttpPost]
+        public IActionResult RegistrarCita(int AbogadoId, DateTime Fecha, string Hora)
         {
             int? clienteId = HttpContext.Session.GetInt32("UsuarioId");
             if (clienteId == null)
                 return RedirectToAction("Login", "Login");
 
-            // Construye la fecha local (Perú, UTC-5)
-            var localDateTime = new DateTime(Fecha.Year, Fecha.Month, Fecha.Day, Hora, 0, 0, DateTimeKind.Unspecified);
+            // Convertir hora peruana a UTC antes de guardar (PostgreSQL exige UTC)
+            // Parsear la hora tipo "09:00"
+            var horaSplit = Hora.Split(':');
+            int horaInt = int.Parse(horaSplit[0]);
+            int minutoInt = int.Parse(horaSplit[1]);
 
-            // Convierte a UTC
-            var peruTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time"); // Windows
-                                                                                                // Si usas Linux, usa: "America/Lima"
-            var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(localDateTime, peruTimeZone);
+            var fechaLocal = new DateTime(Fecha.Year, Fecha.Month, Fecha.Day, horaInt, minutoInt, 0, DateTimeKind.Unspecified);
+            var peruTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
+            var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(fechaLocal, peruTimeZone);
             var fechaFin = fechaInicio.AddHours(1);
 
             var servicio = new Servicio
@@ -104,7 +83,7 @@ namespace jhampro.Controllers
             };
             _context.AbogadoServicio.Add(abogadoServicio);
             _context.SaveChanges();
-            TempData["MensajeExito"] = "La cita fue agendada exitosamente."; //Mensaje de exito
+            TempData["MensajeExito"] = "La cita fue agendada exitosamente.";
             return RedirectToAction("Agendado");
         }
 
@@ -123,7 +102,7 @@ namespace jhampro.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditarCita(int Id, int AbogadoId, DateTime Fecha, int Hora)
+        public IActionResult EditarCita(int Id, int AbogadoId, DateTime Fecha, string Hora)
         {
             var servicio = _context.Servicios
                 .Include(s => s.AbogadoServicios)
@@ -131,10 +110,37 @@ namespace jhampro.Controllers
             if (servicio == null)
                 return NotFound();
 
-            // Actualizar fecha/hora
-            var localDateTime = new DateTime(Fecha.Year, Fecha.Month, Fecha.Day, Hora, 0, 0, DateTimeKind.Unspecified);
+            // Validar formato de hora
+            int horaInt = 0, minutoInt = 0;
+            if (!string.IsNullOrEmpty(Hora) && Hora.Contains(":"))
+            {
+                var horaSplit = Hora.Split(':');
+                if (horaSplit.Length == 2)
+                {
+                    horaInt = int.Parse(horaSplit[0]);
+                    minutoInt = int.Parse(horaSplit[1]);
+                }
+                else
+                {
+                    // Valor inválido, puedes manejar el error aquí
+                    ModelState.AddModelError("Hora", "Hora inválida.");
+                    // Recarga la vista con los datos actuales
+                    var abogados = _context.Usuarios.Where(u => u.TipoUsuario == "Abogado").ToList();
+                    ViewBag.Abogados = abogados;
+                    return View(servicio);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("Hora", "Debe seleccionar una hora.");
+                var abogados = _context.Usuarios.Where(u => u.TipoUsuario == "Abogado").ToList();
+                ViewBag.Abogados = abogados;
+                return View(servicio);
+            }
+
+            var fechaLocal = new DateTime(Fecha.Year, Fecha.Month, Fecha.Day, horaInt, minutoInt, 0, DateTimeKind.Unspecified);
             var peruTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
-            var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(localDateTime, peruTimeZone);
+            var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(fechaLocal, peruTimeZone);
             var fechaFin = fechaInicio.AddHours(1);
 
             servicio.FechaInicio = fechaInicio;
@@ -147,7 +153,6 @@ namespace jhampro.Controllers
                 _context.AbogadoServicio.Remove(abogadoServicio);
                 _context.SaveChanges();
             }
-            // Agregar el nuevo abogado
             var nuevoAbogadoServicio = new AbogadoServicio
             {
                 UsuarioId = AbogadoId,
@@ -223,7 +228,6 @@ namespace jhampro.Controllers
             return Redirect(approvalLink);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> ConfirmarPago(int servicioId, string token)
         {
@@ -258,15 +262,12 @@ namespace jhampro.Controllers
             return RedirectToAction("Agendado");
         }
 
-
-
         [HttpGet]
         public IActionResult CancelarPago(int servicioId)
         {
             TempData["MensajeError"] = "El pago fue cancelado.";
             return RedirectToAction("Agendado");
         }
-
 
         [HttpGet]
         public IActionResult GenerarComprobante(int servicioId)
@@ -312,6 +313,7 @@ namespace jhampro.Controllers
             var pdfUrl = Url.Content($"~/comprobantes/Comprobante_{servicio.Id}.pdf");
             return Redirect(pdfUrl);
         }
+
         [HttpGet]
         public IActionResult MisEstadisticas(DateTime? desde, DateTime? hasta)
         {
@@ -345,6 +347,7 @@ namespace jhampro.Controllers
 
             return View("~/Views/AgendadoCita/Estadisticas.cshtml", estadisticas);
         }
+
         [HttpGet]
         public IActionResult Estadisticas(DateTime? desde, DateTime? hasta)
         {
