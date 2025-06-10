@@ -5,6 +5,7 @@
     var abogados = ViewBag.Abogados as List<jhampro.Models.Usuario>;
     var fechaLocal = Model.FechaInicio.ToLocalTime();
     var abogadoIdSeleccionado = Model.AbogadoServicios?.FirstOrDefault()?.UsuarioId ?? 0;
+    var especialidadSeleccionada = abogados.FirstOrDefault(a => a.Id == abogadoIdSeleccionado)?.Especialidad ?? "";
 }
 <link rel="stylesheet" href="~/css/cita.css" />
 
@@ -21,17 +22,30 @@
 
             <div class="form-section">
                 <div class="form-group mb-3">
-                    <label>Abogado</label>
-                    <select name="AbogadoId" class="form-control" required>
-                        <option value="">Seleccione un abogado</option>
-                        @{
-                            foreach (var abogado in abogados)
-                            {
-                                var selected = abogado.Id == abogadoIdSeleccionado ? "selected" : "";
-                                @:<option value="@abogado.Id" @selected>@($"{abogado.Nombres} {abogado.Apellidos}")</option>
+                    <label>Especialidad</label>
+                        <select id="especialidadSelect" class="form-control" required>
+                            <option value="">Seleccione una especialidad</option>
+                            @{
+                                foreach (var esp in abogados.Select(a => a.Especialidad).Distinct())
+                                {
+                                    var selected = esp == especialidadSeleccionada ? "selected" : "";
+                                    @:<option value="@esp" @selected>@esp</option>
+                                }
                             }
-                        }
-                    </select>
+                        </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Abogado</label>
+                        <select name="AbogadoId" id="abogadoSelect" class="form-control" required>
+                            <option value="">Seleccione un abogado</option>
+                            @{
+                                foreach (var abogado in abogados)
+                                {
+                                    var selected = abogado.Id == abogadoIdSeleccionado ? "selected" : "";
+                                    @:<option value="@abogado.Id" data-especialidad="@abogado.Especialidad" @selected>@($"{abogado.Nombres} {abogado.Apellidos}")</option>
+                                }
+                            }
+                        </select>
                 </div>
                 <div class="form-group mb-3">
                     <label>Fecha</label>
@@ -58,3 +72,35 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const especialidadSelect = document.getElementById('especialidadSelect');
+            const abogadoSelect = document.getElementById('abogadoSelect');
+            const abogadoIdSeleccionado = '@abogadoIdSeleccionado';
+
+            function filtrarAbogados() {
+                const especialidad = especialidadSelect.value;
+                Array.from(abogadoSelect.options).forEach(option => {
+                    if (!option.value) return; // Saltar el "Seleccione un abogado"
+                    option.style.display = option.getAttribute('data-especialidad') === especialidad ? '' : 'none';
+                });
+                // Seleccionar automáticamente el abogado si coincide con la especialidad
+                if (especialidad) {
+                    let found = false;
+                    Array.from(abogadoSelect.options).forEach(option => {
+                        if (option.value === abogadoIdSeleccionado && option.style.display !== 'none') {
+                            option.selected = true;
+                            found = true;
+                        }
+                    });
+                    if (!found) abogadoSelect.selectedIndex = 0;
+                }
+            }
+
+            especialidadSelect.addEventListener('change', filtrarAbogados);
+            filtrarAbogados(); // Inicializar al cargar
+        });
+    </script>
+}
