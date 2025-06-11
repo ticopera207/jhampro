@@ -16,6 +16,7 @@ namespace jhampro.Models
         public string Comentario { get; set; }
         public int Calificacion { get; set; }
         public DateTime Fecha { get; set; }
+        public bool Publico { get; set; }
 
         // Relación uno a uno (Retroalimentación a Servicio)
         public int ServicioId { get; set; }
