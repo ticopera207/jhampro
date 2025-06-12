@@ -1,0 +1,28 @@
+@model jhampro.Models.Servicio
+@using jhampro.Models
+
+<link rel="stylesheet" href="~/css/cita.css" />
+
+<div class="cita-container">
+    <div class="cita-header">
+        <img src="~/imagenes/re1.png" alt="Logo Consultorio" class="cita-logo">
+        <h1>Editar Caso</h1>
+    </div>
+    <div class="cita-body">
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+    <form asp-action="EditarEstado" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <label for="estado">Estado del Servicio:</label>
+        <select asp-for="Estado" class="form-select">
+            <option value="Investigando">Investigando</option>
+            <option value="FinalizadoConÉxito">Finalizado Con Éxito</option>
+            <option value="FinalizadoSinÉxito">Finalizado Sin Éxito</option>
+            <option value="NoContinuado">No Continuado</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary mt-2">Guardar</button>
+    </form>
+    </div>
+</div>

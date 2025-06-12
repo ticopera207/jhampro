@@ -72,6 +72,11 @@ else
                         <td>@cita.Estado</td>
                         <td>@string.Join(", ", abogados)</td>
                         <td>@(cita.Pago != null ? $"${cita.Pago.Monto}" : "No pagado")</td>
+                        <td>
+                            <a asp-controller="AgendadoCita" asp-action="EditarEstado" asp-route-id="@cita.Id" class="btn btn-sm btn-outline-primary">
+                                Cambiar Estado
+                            </a>
+                        </td>
                     </tr>
                 }
             </tbody>

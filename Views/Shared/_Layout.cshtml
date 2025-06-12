@@ -38,20 +38,20 @@
                     {
         <!-- Usuario logueado -->
         <li class="nav-item">
-            <span class="nav-link text-white">Bienvenido, @HttpContextAccessor.HttpContext.Session.GetString("UsuarioNombre")</span>
+            <span class="nav-link text-white">Bienvenido/a, @HttpContextAccessor.HttpContext.Session.GetString("UsuarioNombre")</span>
         </li>
-        <li class="nav-item">
-            <span class="nav-link text-white">Tipo: @HttpContextAccessor.HttpContext.Session.GetString("TipoUsuario")</span>
-        </li>
+        @if (HttpContextAccessor.HttpContext.Session.GetString("TipoUsuario") == "Cliente")
+        {
         <li class="nav-item">
             <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="AgendadoCita" asp-action="Agendado">Agendar Cita</a>
         </li>
-         <li class="nav-item">
-            <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="AgendadoCaso" asp-action="Agendado">Agendar Caso</a>
-        </li>
+        }
+        @if (HttpContextAccessor.HttpContext.Session.GetString("TipoUsuario") != "Cliente")
+        {
         <li class="nav-item">
             <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Historial" asp-action="Citas">Historial Cita</a>
         </li>
+        }
         <li class="nav-item">
        <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Documento" asp-action="Gestionar">Documentos</a>
         </li>
