@@ -1,0 +1,58 @@
+@model IEnumerable<jhampro.Models.Documento>
+
+@{
+    ViewData["Title"] = "Ver Documentos";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📄 Lista de Documentos</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            No hay documentos subidos aún.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Archivo</th>
+                    <th>Fecha Subida</th>
+                    <th>Observación</th>
+                    <th>Servicio ID</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var doc in Model)
+                {
+                    <tr>
+                        <td class="text-center">@doc.Id</td>
+                        <td>
+                            <a href="@doc.RutaArchivo" target="_blank" class="btn btn-outline-primary btn-sm">
+                                @doc.NombreArchivo
+                            </a>
+                        </td>
+                        <td class="text-center">@doc.FechaSubida.ToString("dd/MM/yyyy")</td>
+                        <td>@doc.Observacion</td>
+                        <td class="text-center">@doc.ServicioId</td>
+                        <td class="text-center">
+                            <a href="@doc.RutaArchivo" target="_blank" class="btn btn-sm btn-success me-1" title="Descargar">
+                                <i class="bi bi-download"></i> Descargar
+                            </a>
+
+                            <form asp-action="Eliminar" method="post" asp-route-id="@doc.Id" style="display:inline-block;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este documento?');">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Eliminar">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
