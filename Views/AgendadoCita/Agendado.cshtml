@@ -4,6 +4,32 @@
     var abogados = Model.Abogados;
     var especialidades = abogados.Select(a => a.Especialidad).Distinct().ToList();
 }
+    @* acá pones addEventListener codigo *@
+    @if (TempData["CasoOK"] != null)
+    {
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                alert('@TempData["CasoOK"]');
+            });
+        </script>
+    }
+    @* acá pones addEventListener codigo *@
+    @if (TempData["CasoNOK"] != null)
+    {
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                alert('@TempData["CasoNOK"]');
+            });
+        </script>
+    }
+    @if (TempData["MensajeError"] != null)
+    {
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                alert('@TempData["MensajeError"]');
+            });
+        </script>
+    }
 <link rel="stylesheet" href="~/css/cita.css" />
 <div class="cita-container">
     <div class="cita-header">
@@ -21,7 +47,7 @@
             </div>
         }
 
-        <form asp-action="RegistrarCita" method="post">
+        <form asp-action="RegistrarCita" method="post" novalidate>
             <div class="form-section">
                 <h2>Especialidad</h2>
                 <select id="especialidadSelect" class="form-control" required>
@@ -139,6 +165,20 @@
                         option.text = abogado.Nombres + ' ' + abogado.Apellidos;
                         abogadoSelect.appendChild(option);
                     });
+            }
+        });
+
+        // Validación personalizada para mostrar "Caso NOK"
+        document.querySelector('form[asp-action="RegistrarCita"]').addEventListener('submit', function (e) {
+            const especialidad = document.getElementById('especialidadSelect').value;
+            const abogado = document.getElementById('abogadoSelect').value;
+            const fecha = document.querySelector('input[name="Fecha"]').value;
+            const hora = document.querySelector('select[name="Hora"]').value;
+            const terminos = document.getElementById('Terminos').checked;
+
+            if (!especialidad || !abogado || !fecha || !hora || !terminos) {
+                e.preventDefault(); // Detiene el envío del formulario
+                alert('Caso NOK');
             }
         });
     </script>

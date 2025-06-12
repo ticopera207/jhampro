@@ -33,6 +33,8 @@ namespace jhampro.Controllers
         {
             int? clienteId = HttpContext.Session.GetInt32("UsuarioId");
 
+            TempData["CasoOK"] = "Caso OK";
+
             var model = new AgendadoCitaViewModel
             {
                 Abogados = _context.Usuarios
@@ -47,45 +49,65 @@ namespace jhampro.Controllers
         }
 
     [HttpPost]
-        public IActionResult RegistrarCita(int AbogadoId, DateTime Fecha, string Hora)
+    public IActionResult RegistrarCita(int? AbogadoId, DateTime? Fecha, string Hora)
+    {
+        int? clienteId = HttpContext.Session.GetInt32("UsuarioId");
+        if (clienteId == null)
+            return RedirectToAction("Login", "Login");
+
+        // Validar todos los campos
+        if (AbogadoId == null || Fecha == null || string.IsNullOrEmpty(Hora))
         {
-            int? clienteId = HttpContext.Session.GetInt32("UsuarioId");
-            if (clienteId == null)
-                return RedirectToAction("Login", "Login");
-
-            // Convertir hora peruana a UTC antes de guardar (PostgreSQL exige UTC)
-            // Parsear la hora tipo "09:00"
-            var horaSplit = Hora.Split(':');
-            int horaInt = int.Parse(horaSplit[0]);
-            int minutoInt = int.Parse(horaSplit[1]);
-
-            var fechaLocal = new DateTime(Fecha.Year, Fecha.Month, Fecha.Day, horaInt, minutoInt, 0, DateTimeKind.Unspecified);
-            var peruTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
-            var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(fechaLocal, peruTimeZone);
-            var fechaFin = fechaInicio.AddHours(1);
-
-            var servicio = new Servicio
-            {
-                Estado = "EnEspera",
-                FechaInicio = fechaInicio,
-                FechaFin = fechaFin,
-                TipoServicio = "Cita",
-                ClienteId = clienteId.Value
-            };
-
-            _context.Servicios.Add(servicio);
-            _context.SaveChanges();
-
-            var abogadoServicio = new AbogadoServicio
-            {
-                UsuarioId = AbogadoId,
-                ServicioId = servicio.Id
-            };
-            _context.AbogadoServicio.Add(abogadoServicio);
-            _context.SaveChanges();
-            TempData["MensajeExito"] = "La cita fue agendada exitosamente.";
+            TempData["CasoNOK"] = "Caso NOK";
             return RedirectToAction("Agendado");
         }
+        
+            // Validar máximo 3 citas activas
+            var citasActivas = _context.Servicios
+                .Count(s => s.ClienteId == clienteId && (s.Estado == "EnEspera" || s.Estado == "Pagado"));
+            if (citasActivas >= 3)
+            {
+                TempData["CasoNOK"] = "Caso NOK";
+                TempData["MensajeError"] = "Solo se podran atender maximo 3 citas/casos a la vez por cuenta";
+                return RedirectToAction("Agendado");
+            }
+
+        // Validar formato de hora
+            var horaSplit = Hora.Split(':');
+        if (horaSplit.Length != 2 || !int.TryParse(horaSplit[0], out int horaInt) || !int.TryParse(horaSplit[1], out int minutoInt))
+        {
+            TempData["CasoNOK"] = "Caso NOK";
+            return RedirectToAction("Agendado");
+        }
+
+        var fechaLocal = new DateTime(Fecha.Value.Year, Fecha.Value.Month, Fecha.Value.Day, horaInt, minutoInt, 0, DateTimeKind.Unspecified);
+        var peruTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
+        var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(fechaLocal, peruTimeZone);
+        var fechaFin = fechaInicio.AddHours(1);
+
+        var servicio = new Servicio
+        {
+            Estado = "EnEspera",
+            FechaInicio = fechaInicio,
+            FechaFin = fechaFin,
+            TipoServicio = "Cita",
+            ClienteId = clienteId.Value
+        };
+
+        _context.Servicios.Add(servicio);
+        _context.SaveChanges();
+
+        var abogadoServicio = new AbogadoServicio
+        {
+            UsuarioId = AbogadoId.Value,
+            ServicioId = servicio.Id
+        };
+        _context.AbogadoServicio.Add(abogadoServicio);
+        _context.SaveChanges();
+        TempData["MensajeExito"] = "La cita fue agendada exitosamente.";
+        TempData["CasoOK"] = "Caso OK";
+        return RedirectToAction("Agendado");
+    }
 
         [HttpGet]
         public IActionResult EditarCita(int servicioId)
