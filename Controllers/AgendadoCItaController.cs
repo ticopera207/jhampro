@@ -165,6 +165,27 @@ namespace jhampro.Controllers
             return RedirectToAction("Agendado");
         }
 
+    public async Task<IActionResult> EditarEstado(int id)
+    {
+        var servicio = await _context.Servicios.FindAsync(id);
+        if (servicio == null) return NotFound();
+
+        return View(servicio);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditarEstado(int id, string nuevoEstado)
+    {
+        var servicio = await _context.Servicios.FindAsync(id);
+        if (servicio == null) return NotFound();
+
+        servicio.Estado = nuevoEstado;
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Agendado");
+    }
+
         [HttpPost]
         public IActionResult CancelarCita(int servicioId)
         {

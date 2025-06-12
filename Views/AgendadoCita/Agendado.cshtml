@@ -1,4 +1,6 @@
 @model jhampro.Models.AgendadoCitaViewModel
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "Agendar Cita";
     var abogados = Model.Abogados;
@@ -96,7 +98,7 @@
                                 <button type="submit" class="btn-primary" style="min-width:120px;">Pagar</button>
                             </form>
                             <a asp-action="EditarCita" asp-controller="AgendadoCita" asp-route-servicioId="@servicio.Id" class="btn btn-warning" style="min-width:90px;">
-                                Editar
+                                Reprogramar
                             </a>
                             <form asp-action="CancelarCita" asp-controller="AgendadoCita" method="post" style="margin: 0;" onsubmit="return confirm('¿Estás seguro de cancelar esta cita?');">
                                 <input type="hidden" name="servicioId" value="@servicio.Id" />
@@ -111,6 +113,13 @@
                         href="@Url.Action("GenerarComprobante", "AgendadoCita", new { servicioId = servicio.Id })"
                         target="_blank">
                             Generar y Descargar Comprobante
+                        </a>
+                    }
+
+                    @if (HttpContextAccessor.HttpContext.Session.GetString("TipoUsuario") == "Abogado")
+                    {
+                        <a asp-action="EditarEstado" asp-route-id="@servicio.Id" asp-controller="AgendadoCita" class="btn btn-success" style="min-width:90px;">
+                            Editar
                         </a>
                     }
 
