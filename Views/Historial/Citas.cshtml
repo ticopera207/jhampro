@@ -1,48 +1,80 @@
-@model List<jhampro.Models.Servicio>
+@model jhampro.Models.HistorialFiltroViewModel
 
 @{
     ViewData["Title"] = "Historial de Citas";
 }
 
-<h2>Historial de Citas</h2>
+<h2 class="mb-4">Historial de Citas</h2>
 
-@if (!Model.Any())
+<!-- Filtro -->
+<form asp-action="Citas" method="get" class="mb-4">
+    <div class="row g-2">
+        <div class="col">
+            <input asp-for="Id" class="form-control" placeholder="ID" />
+        </div>
+        <div class="col">
+            <input asp-for="Fecha" type="date" class="form-control" />
+        </div>
+        @* <div class="col">
+            <input asp-for="Hora" class="form-control" placeholder="HH:mm" />
+        </div> *@
+        <div class="col">
+            <input asp-for="Estado" class="form-control" placeholder="Estado" />
+        </div>
+        <div class="col">
+            <input asp-for="NombreAbogado" class="form-control" placeholder="Abogado" />
+        </div>
+        <div class="col">
+            <select asp-for="Pagado" class="form-control">
+                <option value="">Pago?</option>
+                <option value="true">Pagado</option>
+                <option value="false">No Pagado</option>
+            </select>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </div>
+</form>
+
+<!-- Resultados -->
+@if (!Model.Resultados.Any())
 {
-    <p>No tienes citas registradas.</p>
+    <div class="alert alert-warning" role="alert">
+        No tienes citas registradas con los filtros aplicados.
+    </div>
 }
 else
 {
-    <table class="table table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Estado</th>
-                <th>Abogado(s)</th>
-                <th>Pago</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var cita in Model)
-        {
-            var fecha = cita.FechaInicio.ToLocalTime().ToString("dd/MM/yyyy");
-            var hora = cita.FechaInicio.ToLocalTime().ToString("HH:mm");
-            var abogados = cita.AbogadoServicios.Select(a => a.Abogado.Nombres + " " + a.Abogado.Apellidos).ToList();
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle shadow-sm">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>#Orden de cita</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Estado</th>
+                    <th>Abogado(s)</th>
+                    <th>Pago</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cita in Model.Resultados)
+                {
+                    var fecha = cita.FechaInicio.ToLocalTime().ToString("dd/MM/yyyy");
+                    var hora = cita.FechaInicio.ToLocalTime().ToString("HH:mm");
+                    var abogados = cita.AbogadoServicios.Select(a => a.Abogado.Nombres + " " + a.Abogado.Apellidos).ToList();
 
-            <tr>
-                <td>@cita.Id</td>
-                <td>@fecha</td>
-                <td>@hora</td>
-                <td>@cita.Estado</td>
-                <td>
-                    @string.Join(", ", abogados)
-                </td>
-                <td>
-                    @(cita.Pago != null ? $"${cita.Pago.Monto}" : "No pagado")
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+                    <tr>
+                        <td class="text-center">@cita.Id</td>
+                        <td>@fecha</td>
+                        <td>@hora</td>
+                        <td>@cita.Estado</td>
+                        <td>@string.Join(", ", abogados)</td>
+                        <td>@(cita.Pago != null ? $"${cita.Pago.Monto}" : "No pagado")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
