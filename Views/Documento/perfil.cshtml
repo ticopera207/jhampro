@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Perfil de Documentos";
+    var nombreUsuario = Context.Session.GetString("UsuarioNombre");
+    var tipoUsuario = Context.Session.GetString("TipoUsuario");
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">📁 Gestión de Documentos</h2>
+
+    <div class="card text-center">
+        <div class="card-body">
+            <h4 class="card-title">Bienvenido, @nombreUsuario (@tipoUsuario)</h4>
+            <p class="card-text">Desde aquí puedes gestionar los documentos del sistema.</p>
+
+            <a class="btn btn-primary m-2" asp-controller="Documento" asp-action="Ver">Ver Documentos</a>
+
+            @if (tipoUsuario == "Administrador" || tipoUsuario == "Abogado")
+            {
+                <a class="btn btn-secondary m-2" asp-controller="Documento" asp-action="Gestionar">Gestionar Documentos</a>
+            }
+        </div>
+    </div>
+</div>
