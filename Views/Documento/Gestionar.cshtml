@@ -1,0 +1,52 @@
+@model jhampro.Models.Documento
+
+@{
+    ViewData["Title"] = "Subir Documento";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">📤 Subir Nuevo Documento</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body">
+                    <form asp-action="Gestionar" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label asp-for="Observacion" class="form-label fw-bold">Observación (opcional)</label>
+                            <textarea asp-for="Observacion" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Observacion" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ServicioId" class="form-label fw-bold">Servicio ID</label>
+                            <input asp-for="ServicioId" class="form-control" />
+                            <span asp-validation-for="ServicioId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Archivo" class="form-label fw-bold">Archivo PDF o Word</label>
+                            <input type="file" name="Archivo" class="form-control" accept=".pdf,.doc,.docx" />
+                            @if (ViewData.ModelState["Archivo"] != null)
+                            {
+                                <span class="text-danger">
+                                    @ViewData.ModelState["Archivo"].Errors.FirstOrDefault()?.ErrorMessage
+                                </span>
+                            }
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-upload"></i> Subir Documento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

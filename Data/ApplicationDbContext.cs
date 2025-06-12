@@ -12,6 +12,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Servicio> Servicios { get; set; }
     public DbSet<AbogadoServicio> AbogadoServicio { get; set; }
+    
+    public DbSet<Documento> Documentos { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Relación uno a muchos (Cliente a Servicio)
@@ -40,13 +42,13 @@ public class ApplicationDbContext : DbContext
             .HasOne(s => s.Pago)
             .WithOne(p => p.Servicio)
             .HasForeignKey<Pago>(p => p.ServicioId);
-        
+
         // Relación uno a uno (Retroalimentación a Servicio)
         modelBuilder.Entity<Servicio>()
             .HasOne(r => r.Retroalimentacion)
             .WithOne(p => p.Servicio)
             .HasForeignKey<Retroalimentacion>(p => p.ServicioId);
-        
+
         // Relación uno a muchos (Servicio a Documento)
         modelBuilder.Entity<Documento>()
             .HasOne(d => d.Servicio)

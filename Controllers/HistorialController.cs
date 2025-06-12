@@ -22,22 +22,51 @@ namespace jhampro.Controllers
             _context = context;
         }
 
-        public IActionResult Citas()
+        [HttpGet]
+        public IActionResult Citas(HistorialFiltroViewModel filtro)
         {
             int? clienteId = HttpContext.Session.GetInt32("UsuarioId");
 
             if (clienteId == null)
                 return RedirectToAction("Login", "Login");
 
-            var citas = _context.Servicios
-                .Include(s => s.Pago)
-                .Include(s => s.AbogadoServicios)
-                    .ThenInclude(asg => asg.Abogado)
-                .Where(s => s.ClienteId == clienteId)
-                .OrderByDescending(s => s.FechaInicio)
-                .ToList();
+            var query = _context.Servicios
+                    .Include(s => s.Pago)
+                    .Include(s => s.AbogadoServicios)
+                        .ThenInclude(asg => asg.Abogado)
+                    .Where(s => s.ClienteId == clienteId);
+                    
+            
+            // Aplicar filtros dinámicamente
+            if (filtro.Id.HasValue)
+                query = query.Where(s => s.Id == filtro.Id.Value);
 
-            return View(citas);
+            if (filtro.Fecha.HasValue)
+            {
+                var fechaUtc = DateTime.SpecifyKind(filtro.Fecha.Value.Date, DateTimeKind.Utc);
+                query = query.Where(s => s.FechaInicio.Date == fechaUtc.Date);
+            }
+            
+            
+
+            var citas = query
+            .AsEnumerable() // Aquí pasa a memoria
+            .Where(s =>
+                string.IsNullOrEmpty(filtro.Hora) || s.FechaInicio.ToString("HH:mm") == filtro.Hora)
+            .Where(s =>
+                string.IsNullOrEmpty(filtro.Estado) || s.Estado.Contains(filtro.Estado, StringComparison.OrdinalIgnoreCase))
+            .Where(s =>
+                string.IsNullOrEmpty(filtro.NombreAbogado) || s.AbogadoServicios.Any(a =>
+                    (a.Abogado.Nombres + " " + a.Abogado.Apellidos)
+                    .Contains(filtro.NombreAbogado, StringComparison.OrdinalIgnoreCase)))
+            .Where(s =>
+                !filtro.Pagado.HasValue || (s.Pago != null) == filtro.Pagado.Value)
+            .OrderByDescending(s => s.FechaInicio)
+            .ToList();
+
+        filtro.Resultados = citas;
+
+            return View(filtro);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

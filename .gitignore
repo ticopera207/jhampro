@@ -28,6 +28,7 @@ nupkg/
 *.sln.docstates
 
 # Build results
+
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -42,3 +43,5 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+appsettings.json
+appsettings.Development.json
