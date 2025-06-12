@@ -21,6 +21,7 @@ else
                 <th>Estado</th>
                 <th>Abogado(s)</th>
                 <th>Pago</th>
+                <th>Editar</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +41,11 @@ else
                 </td>
                 <td>
                     @(cita.Pago != null ? $"${cita.Pago.Monto}" : "No pagado")
+                </td>
+                <td>
+                    <a asp-controller="AgendadoCita" asp-action="EditarEstado" asp-route-id="@cita.Id" class="btn btn-sm btn-outline-primary">
+                        Cambiar Estado
+                    </a>
                 </td>
             </tr>
         }

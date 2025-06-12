@@ -115,14 +115,6 @@
                             Generar y Descargar Comprobante
                         </a>
                     }
-
-                    @if (HttpContextAccessor.HttpContext.Session.GetString("TipoUsuario") == "Abogado")
-                    {
-                        <a asp-action="EditarEstado" asp-route-id="@servicio.Id" asp-controller="AgendadoCita" class="btn btn-success" style="min-width:90px;">
-                            Editar
-                        </a>
-                    }
-
                 </div>
             }
         </div>

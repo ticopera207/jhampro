@@ -173,17 +173,37 @@ namespace jhampro.Controllers
         return View(servicio);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditarEstado(int id, string nuevoEstado)
-    {
-        var servicio = await _context.Servicios.FindAsync(id);
-        if (servicio == null) return NotFound();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditarEstado(int id, IFormCollection form)
+        {
+            var servicio = await _context.Servicios.FindAsync(id);
+            if (servicio == null)
+            {
+                return NotFound();
+            }
 
-        servicio.Estado = nuevoEstado;
-        await _context.SaveChangesAsync();
+            var nuevoEstado = form["Estado"]; // Coincide con el name="Estado" del <select>
 
-        return RedirectToAction("Agendado");
+            if (string.IsNullOrEmpty(nuevoEstado))
+            {
+                ModelState.AddModelError("", "El estado no puede estar vacío.");
+                return View(servicio);
+            }
+
+            servicio.Estado = nuevoEstado;
+        
+            try
+            {
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Citas", "Historial");
+            }
+            catch (Exception ex)
+            {
+                // Opcional: registrar el error
+                ModelState.AddModelError("", "Error al guardar los cambios.");
+                return View(servicio);
+            }
     }
 
         [HttpPost]
