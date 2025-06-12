@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using jhampro.Models;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace jhampro.Controllers
 {
@@ -31,8 +33,8 @@ namespace jhampro.Controllers
             {
                 HttpContext.Session.SetString("UsuarioNombre", usuario.Nombres);
                 HttpContext.Session.SetString("apellidosAbogado", usuario.Apellidos);
-                 HttpContext.Session.SetString("Celular", usuario.Celular);
-                 HttpContext.Session.SetString("Correo", usuario.Correo);
+                HttpContext.Session.SetString("Celular", usuario.Celular);
+                HttpContext.Session.SetString("Correo", usuario.Correo);
                 HttpContext.Session.SetString("TipoUsuario", usuario.TipoUsuario);
                 HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
 
@@ -60,10 +62,60 @@ namespace jhampro.Controllers
         {
             return View("Error!");
         }
+
+        [HttpGet]
+        public IActionResult RecuperarContrasena()
+        {
+            ViewBag.Verificado = false;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RecuperarContrasena(RecuperarContrasenaViewModel model)
+        {
+            if (Request.Form["fase"] == "verificar")
+            {
+                var usuario = _context.Usuarios.FirstOrDefault(u => u.Correo == model.CorreoElectronico);
+                if (usuario == null)
+                {
+                    ViewBag.Error = "El correo no está registrado.";
+                    ViewBag.Verificado = false;
+                    return View(model);
+                }
+
+                ViewBag.Exito = "Correo verificado. Ahora puedes ingresar la nueva contraseña.";
+                ViewBag.Verificado = true;
+                return View(model);
+            }
+
+            var user = _context.Usuarios.FirstOrDefault(u => u.Correo == model.CorreoElectronico);
+            if (user == null)
+            {
+                ViewBag.Error = "Error interno. Usuario no encontrado.";
+                ViewBag.Verificado = true;
+                return View(model);
+            }
+
+            if (model.NuevaContrasena == user.Contrasena)
+            {
+                ViewBag.Error = "La nueva contraseña no puede ser igual a la anterior.";
+                ViewBag.Verificado = true;
+                return View(model);
+            }
+
+            user.Contrasena = model.NuevaContrasena;
+            _context.SaveChanges();
+
+            ViewBag.MostrarModal = true;
+            return View("RecuperarContrasena", model);
+
+        }
+
         public IActionResult Logout()
         {
             HttpContext.Session.Clear(); // Elimina todas las variables de sesión
             return RedirectToAction("Index", "Home");
         }
     }
+
 }
