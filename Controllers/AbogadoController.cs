@@ -24,7 +24,7 @@ namespace jhampro.Controllers
 
             if (string.IsNullOrEmpty(tipoUsuario) || tipoUsuario != "Abogado")
             {
-                return RedirectToAction("Login", "Login");
+                return View();
             }
 
             // Puedes enviar datos a la vista con ViewBag o un modelo

@@ -44,7 +44,7 @@ namespace jhampro.Controllers
                 }
                 else if (usuario.TipoUsuario == "Abogado")
                 {
-                    return RedirectToAction("Abogado", "Abogado");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
