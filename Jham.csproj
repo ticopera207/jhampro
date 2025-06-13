@@ -25,5 +25,4 @@
     <PackageReference Include="PayPalCheckoutSdk" Version="1.0.4" />
     <PackageReference Include="PdfSharpCore" Version="1.3.67" />
   </ItemGroup>
-
 </Project>

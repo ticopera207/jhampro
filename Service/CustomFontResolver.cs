@@ -14,7 +14,8 @@ namespace jhampro.Service
         public CustomFontResolver()
         {
             // Asegúrate de que el archivo esté presente
-            _fontData = File.ReadAllBytes(Path.Combine("wwwroot", "fuentes", "ARIAL.ttf"));
+            var fontPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "fuentes", "ArialCE.ttf");
+            _fontData = File.ReadAllBytes(fontPath);
         }
 
         public byte[] GetFont(string faceName)
@@ -24,9 +25,9 @@ namespace jhampro.Service
 
         public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
         {
-            return new FontResolverInfo("ARIAL#");
+            return new FontResolverInfo("ArialCE#");
         }
 
-        public string DefaultFontName => "ARIAL#";
+        public string DefaultFontName => "ArialCE#";
     }
 }
