@@ -54,10 +54,11 @@
         <li class="nav-item">
             <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="Documento" asp-action="Gestionar">Documentos</a>
         </li>
+        }
         <li class="nav-item">
             <a class="nav-link text-white fw-semibold" asp-area="" asp-controller="AgendadoCita" asp-action="Estadisticas">Estadísticas</a>
         </li>
-        }
+        
 
 
         @if (HttpContextAccessor.HttpContext.Session.GetString("TipoUsuario") == "Administrador")
