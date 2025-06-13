@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using jhampro.Models;
+using jhampro.Service;
 using Amazon.S3;
 using Amazon;
 using Amazon.Extensions.NETCore.Setup;
@@ -35,6 +36,9 @@ var awsOptions = new AWSOptions
 
 builder.Services.AddDefaultAWSOptions(awsOptions);
 builder.Services.AddAWSService<IAmazonS3>(); // Ahora sí funcionará correctamente
+
+// Registrar font resolver global
+PdfSharpCore.Fonts.GlobalFontSettings.FontResolver = new CustomFontResolver();
 
 
 var app = builder.Build();
